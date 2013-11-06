@@ -32,6 +32,9 @@ public class Room {
 	}
 	
 	public boolean addBase(int x, int y) {
+		/*
+		 * Only one base
+		 */
 		for(int i=0; i<DEFAULT_SIZE; i++)
 			for(int j=0; j<DEFAULT_SIZE; j++)
 				if(cell[i][j]==-1)
