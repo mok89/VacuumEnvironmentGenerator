@@ -27,6 +27,7 @@ public class EditorPanel extends JPanel {
 	
 	private Room room;
 	private Image imgDirty;
+	private Image imgWall;
 	private MouseListener mouseListener;
 	
 	public EditorPanel() {
@@ -42,6 +43,7 @@ public class EditorPanel extends JPanel {
 	private void uploadPictures() {
 		try {
 			imgDirty = ImageIO.read(new File(".//img//polvere_625833.jpg"));
+			imgWall = ImageIO.read(new File(".//img//wall.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -63,24 +65,33 @@ public class EditorPanel extends JPanel {
 		return (pixelHeight/optimalSizeCellHeight());
 	}
 	
-	public void setDirty(int pixelWidth, int pixelHeight) {
+	public void setCell(int pixelWidth, int pixelHeight, int state) {
 		int positionX = getPositionX(pixelWidth);
 		int positionY = getPositionY(pixelHeight);
 		/*
 		System.out.println("x: " + positionX);
 		System.out.println("y: " + positionY);
 		*/
-		room.setCell(positionY, positionX, Room.DIRTY);
+		room.setCell(positionY, positionX, state);
 		repaint();
 	}
 	
-	public void setClean(int pixelWidth, int pixelHeight) {
+	public void setCell(int pixelWidth, int pixelHeight) {
 		int positionX = getPositionX(pixelWidth);
 		int positionY = getPositionY(pixelHeight);
-		room.setCell(positionY, positionX, Room.CLEAN);
+		/*
+		System.out.println("x: " + positionX);
+		System.out.println("y: " + positionY);
+		*/
+		if(room.getCell()[positionY][positionX]==Room.CLEAN)
+			room.setCell(positionY, positionX, Room.DIRTY);
+		else if(room.getCell()[positionY][positionX]==Room.DIRTY)
+			room.setCell(positionY, positionX, Room.WALL);
+		else
+			room.setCell(positionY, positionX, Room.CLEAN);
 		repaint();
 	}
-	
+		
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -88,6 +99,8 @@ public class EditorPanel extends JPanel {
 			for(int j=0; j<Room.DEFAULT_SIZE; j++) {
 				if(room.getCell()[i][j]==Room.DIRTY)
 					g.drawImage(this.imgDirty, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
+				else if(room.getCell()[i][j]==Room.WALL)
+					g.drawImage(this.imgWall, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
 				g.drawRect(j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight());
 			}
 	}
