@@ -28,10 +28,16 @@ public class Room {
 	}
 
 	public void setCell(int i, int j, int state) {
-		cell[i][j]=state;
+		if(state==Room.BASE) {
+			if(thereIsBase(i, j))
+				cell[i][j]=state;
+		}
+		else {
+			cell[i][j]=state;
+		}
 	}
 	
-	public boolean addBase(int x, int y) {
+	public boolean thereIsBase(int x, int y) {
 		/*
 		 * Only one base
 		 */
@@ -39,7 +45,6 @@ public class Room {
 			for(int j=0; j<DEFAULT_SIZE; j++)
 				if(cell[i][j]==-1)
 					return false;
-		cell[x][y]=-1;
 		return true;
 	}
 	

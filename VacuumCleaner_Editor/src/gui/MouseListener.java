@@ -41,8 +41,8 @@ public class MouseListener extends MouseAdapter {
 		super.mouseClicked(arg0);
 		if(arg0.getButton()==MouseEvent.BUTTON1)
 			editorPanel.setCell(arg0.getX(), arg0.getY());
-	}
-	
-	
+		else
+			editorPanel.setCell(arg0.getX(), arg0.getY(), Room.BASE);
+	}	
 	
 }

@@ -28,6 +28,8 @@ public class EditorPanel extends JPanel {
 	private Room room;
 	private Image imgDirty;
 	private Image imgWall;
+	private Image imgBase;
+	
 	private MouseListener mouseListener;
 	
 	public EditorPanel() {
@@ -44,6 +46,7 @@ public class EditorPanel extends JPanel {
 		try {
 			imgDirty = ImageIO.read(new File(".//img//polvere_625833.jpg"));
 			imgWall = ImageIO.read(new File(".//img//wall.jpg"));
+			imgBase = ImageIO.read(new File(".//img//base.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -101,6 +104,8 @@ public class EditorPanel extends JPanel {
 					g.drawImage(this.imgDirty, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
 				else if(room.getCell()[i][j]==Room.WALL)
 					g.drawImage(this.imgWall, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
+				else if(room.getCell()[i][j]==Room.BASE)
+					g.drawImage(this.imgBase, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
 				g.drawRect(j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight());
 			}
 	}
