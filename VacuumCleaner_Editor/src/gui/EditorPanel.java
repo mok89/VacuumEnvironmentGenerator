@@ -92,6 +92,8 @@ public class EditorPanel extends JPanel {
 			room.setCell(positionY, positionX, Room.WALL);
 		else
 			room.setCell(positionY, positionX, Room.CLEAN);
+		if(room.getCell()[positionY][positionX]==Room.BASE)
+			room.setCell(positionY, positionX, Room.CLEAN);
 		repaint();
 	}
 		
