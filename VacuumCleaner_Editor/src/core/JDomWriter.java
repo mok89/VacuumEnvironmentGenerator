@@ -51,6 +51,16 @@ public class JDomWriter {
 		utente.addContent(cognome);
 		root.addContent(utente);
 		WriteToFile(document, "testJDom");
+		
+		/*
+		 * <?xml version="1.0" encoding="UTF-8"?>
+		 * <utenti>
+         *		<utente>
+         *			<nome>Fabrizio</nome>
+         *			<cognome>Cava</cognome>
+         *		</utente>
+         * </utenti>
+		 */
 	}
 	
 	public static void main(String[] args) {
