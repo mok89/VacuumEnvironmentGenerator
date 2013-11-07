@@ -44,4 +44,8 @@ public class Randomize {
 //		r.print(cell, Room.DEFAULT_SIZE);
 //	}
 
+	public void ciao(){
+		System.out.println("ciao");
+	}
+	
 }
