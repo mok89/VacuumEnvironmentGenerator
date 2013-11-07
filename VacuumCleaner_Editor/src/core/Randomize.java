@@ -4,9 +4,10 @@ public class Randomize {
 
 	public void randomize(int[][] cell, int size) {
 		boolean baseIsLocated=false;
+		int r;
 		for(int i=0;i<size;i++){
 			for(int j=0;j<size;j++){
-				int r=(int) ((Math.random()*100)%100);
+				r=(int) ((Math.random()*100)%100);
 				if(!baseIsLocated && r>50 && r<55){
 					cell[i][j]=Room.BASE;
 					baseIsLocated=true;
@@ -16,14 +17,13 @@ public class Randomize {
 					cell[i][j]=Room.WALL;
 				}else
 					cell[i][j]=Room.CLEAN;
-				if(!baseIsLocated){
-					r=(int) ((Math.random()*100)%size);
-					int c=(int) ((Math.random()*100)%size);
-					cell[r][c]=Room.BASE;
-					baseIsLocated=true;
-				}
-					
 			}
+		}
+		if(!baseIsLocated){
+			r=(int) ((Math.random()*100)%size);
+			int c=(int) ((Math.random()*100)%size);
+			cell[r][c]=Room.BASE;
+			baseIsLocated=true;
 		}
 	}
 //	private void print(int[][]cell,int size){
