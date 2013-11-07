@@ -29,7 +29,7 @@ public class Room {
 
 	public void setCell(int i, int j, int state) {
 		if(state==Room.BASE) {
-			if(thereIsBase(i, j))
+			if(thereIsBase())
 				cell[i][j]=state;
 		}
 		else {
@@ -37,7 +37,7 @@ public class Room {
 		}
 	}
 	
-	public boolean thereIsBase(int x, int y) {
+	public boolean thereIsBase() {
 		/*
 		 * Only one base
 		 */
