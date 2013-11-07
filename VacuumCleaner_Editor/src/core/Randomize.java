@@ -47,5 +47,7 @@ public class Randomize {
 	public void ciao2(){
 		System.out.println("IMPORTANTISSIMA");
 	}
-	
+	public void ciao3(){
+		System.out.println("IMPORTANTISSIMA");
+	}
 }
