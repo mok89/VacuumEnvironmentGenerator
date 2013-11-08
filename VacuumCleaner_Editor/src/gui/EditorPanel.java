@@ -43,6 +43,10 @@ public class EditorPanel extends JPanel {
 		addMouseListener(mouseListener);
 	}
 	
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+
 	private void uploadPictures() {
 		try {
 			imgDirty = ImageIO.read(new File(".//img//polvere_625833.jpg"));
@@ -55,11 +59,11 @@ public class EditorPanel extends JPanel {
 	}
 	
 	public int optimalSizeCellWidth() {
-		return (this.getWidth()/Room.DEFAULT_SIZE);
+		return (this.getWidth()/room.getSize());
 	}
 	
 	public int optimalSizeCellHeight() {
-		return (this.getHeight()/Room.DEFAULT_SIZE);
+		return (this.getHeight()/room.getSize());
 	}
 	
 	private int getPositionX(int pixelWidth) {
@@ -102,8 +106,8 @@ public class EditorPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		for(int i=0; i<Room.DEFAULT_SIZE; i++)
-			for(int j=0; j<Room.DEFAULT_SIZE; j++) {
+		for(int i=0; i<room.getSize(); i++)
+			for(int j=0; j<room.getSize(); j++) {
 				if(room.getCell()[i][j]==Room.DIRTY)
 					g.drawImage(this.imgDirty, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
 				else if(room.getCell()[i][j]==Room.WALL)

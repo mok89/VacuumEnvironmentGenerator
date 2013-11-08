@@ -23,9 +23,9 @@ public class MenuListener implements ActionListener {
 			//editorFrame.getMessage().saveProject();
 			//editorFrame.dispose();
 		}
-		/*
-		else if(e.getActionCommand().compareTo("Nuovo")==0)
+		else if(e.getActionCommand().compareTo("New")==0)
 			editorFrame.newProject();
+		/*
 		else if(e.getActionCommand().compareTo("Apri")==0)
 			editorFrame.openFile();
 		else if(e.getActionCommand().compareTo("Salva")==0)

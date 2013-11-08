@@ -10,11 +10,13 @@ import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 
 import core.JDomWriter;
 import core.Room;
@@ -32,8 +34,8 @@ public class EditorFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	protected final static int SCREEN_DEFAULT_SIZE_WIDTH = 800;
-	protected final static int SCREEN_DEFAULT_SIZE_HEIGHT = 800;	
+	protected final static int SCREEN_DEFAULT_SIZE_WIDTH = 730;
+	protected final static int SCREEN_DEFAULT_SIZE_HEIGHT = 700;	
 	
 	private GraphicsEnvironment ge;	
 	
@@ -51,8 +53,15 @@ public class EditorFrame extends JFrame {
 	
 	private EditorPanel editorPanel;	
 	
-	JPanel buttonPanel =new JPanel(new FlowLayout());
-	JSplitPane js=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	JTextField sizeTextField;
+	JTextField energyTextField;
+	JTextField percDirtyTextField;
+	JTextField percCleanTextField;
+	JTextField costMoveTextField;
+	JTextField costSuckTextField;
+	
+	JPanel optionPanel =new JPanel(new FlowLayout());
+	JSplitPane js=new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
 	private Room room;
 	
@@ -71,14 +80,51 @@ public class EditorFrame extends JFrame {
 		room =new Room();
 		editorPanel = new EditorPanel(room);
 		conteiner();
-		initButtonPanel();
+		initOptionPanel();
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		frameListener = new FrameListener(this);
 		this.addWindowListener(frameListener);
 	}
 	
-	private void initButtonPanel() {
-		JButton randomize=new JButton("Randomize the grid");
+	private void initOptionPanel() {
+		
+		JLabel sizeLabel = new JLabel("Size");
+		optionPanel.add(sizeLabel);
+		sizeTextField = new JTextField(String.valueOf(room.getSize()));
+		sizeTextField.setColumns(4);
+		optionPanel.add(sizeTextField);
+	
+		JLabel energyLabel = new JLabel("Energy");
+		optionPanel.add(energyLabel);
+		energyTextField = new JTextField(String.valueOf(room.getEnergy()));
+		energyTextField.setColumns(4);
+		optionPanel.add(energyTextField);
+		
+		JLabel percDirtyLabel = new JLabel("% Dirty");
+		optionPanel.add(percDirtyLabel);
+		percDirtyTextField = new JTextField(String.valueOf(room.getPerc_dirty()));
+		percDirtyTextField.setColumns(4);
+		optionPanel.add(percDirtyTextField);
+		
+		JLabel percCleanLabel = new JLabel("% Clean");
+		optionPanel.add(percCleanLabel);
+		percCleanTextField = new JTextField(String.valueOf(room.getPerc_clean()));
+		percCleanTextField.setColumns(4);
+		optionPanel.add(percCleanTextField);
+		
+		JLabel costMoveLabel = new JLabel("Cost move");
+		optionPanel.add(costMoveLabel);
+		costMoveTextField = new JTextField(String.valueOf(room.getCost_move_up()));
+		costMoveTextField.setColumns(4);
+		optionPanel.add(costMoveTextField);
+		
+		JLabel costSuckLabel = new JLabel("Cost suck");
+		optionPanel.add(costSuckLabel);
+		costSuckTextField = new JTextField(String.valueOf(room.getCost_suck()));
+		costSuckTextField.setColumns(4);
+		optionPanel.add(costSuckTextField);
+		
+		JButton randomize=new JButton("Randomize");
 		randomize.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -87,7 +133,7 @@ public class EditorFrame extends JFrame {
 				super.mouseClicked(e);
 			}
 		});
-		buttonPanel.add(randomize);
+		optionPanel.add(randomize);
 	}
 
 	private void setCenterScreen() {
@@ -147,8 +193,15 @@ public class EditorFrame extends JFrame {
 		this.setLayout(new BorderLayout());
 		js.setDividerLocation(getWidth()-getWidth()/5);
 		js.setLeftComponent(editorPanel);
-		js.setRightComponent(buttonPanel);
+		js.setRightComponent(optionPanel);
 		this.add(js,BorderLayout.CENTER);
+	}
+	
+	public void newProject() {
+		room = new Room(Integer.parseInt(sizeTextField.getText()), Double.parseDouble(energyTextField.getText()), Double.parseDouble(percDirtyTextField.getText()), Double.parseDouble(percCleanTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costSuckTextField.getText()));
+		editorPanel.setRoom(room);
+		editorPanel.validate();
+		editorPanel.repaint();
 	}
 	
 	public void saveAsFile() {
