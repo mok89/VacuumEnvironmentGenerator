@@ -8,27 +8,13 @@ import javax.swing.JOptionPane;
 public class FrameListener extends WindowAdapter {
 	
 	public FrameListener(EditorFrame editorFrame) {
-		// TODO Auto-generated constructor stub
 		super();
 		this.editorFrame = editorFrame;
 	}
 	
-	public void saveProject() {
-		int ret = JOptionPane.showConfirmDialog(editorFrame, "Vuoi salvare il progetto?", "SALVA PROGETTO", JOptionPane.YES_NO_OPTION);
-		if(ret == JOptionPane.YES_OPTION) {
-			/*
-			if(editorFrame.getNameFileOpened().equals(""))
-				editorFrame.saveAsFile();
-			else
-				editorFrame.saveFile();
-			*/
-		}
-	}
-	
 	public void windowClosing(WindowEvent e) {
-		int ret = JOptionPane.showConfirmDialog(editorFrame, "Uscire dall'editor?", "EDITOR", JOptionPane.YES_NO_OPTION);
+		int ret = JOptionPane.showConfirmDialog(editorFrame, "Do you want to exit from editor?", "EDITOR", JOptionPane.YES_NO_OPTION);
 		if(ret == JOptionPane.YES_OPTION) {
-			saveProject();
 			editorFrame.dispose();
 		}
 	}

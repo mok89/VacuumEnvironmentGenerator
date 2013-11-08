@@ -28,10 +28,13 @@ public class JDomWriter {
 	}
 	
 	private void WriteToFile(Document document, String filename) {
+		String ext = filename.substring(filename.length()-4, filename.length());
+		if(!ext.equals(".xml"))
+			filename += ".xml";
 		XMLOutputter outputter = new XMLOutputter();
 		outputter.setFormat(Format.getPrettyFormat());
 		try {
-			outputter.output(document, new FileOutputStream(".//environment//"+filename+".xml"));
+			outputter.output(document, new FileOutputStream(".//environment//"+filename/*+".xml"*/));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -41,10 +44,7 @@ public class JDomWriter {
 		}
 	}
 	
-	public void createXML() {
-		/*
-		 * inserire in input filename
-		 */
+	public void createXML(String filename) {
 		Element vacuum_istance = new Element("vacuum_istance");
 		
 		Document document = new Document(vacuum_istance);
@@ -69,7 +69,7 @@ public class JDomWriter {
 					tile_state.setAttribute("x", String.valueOf(i));
 					tile_state.setAttribute("y", String.valueOf(j));
 					if(room.getCell()[i][j]==Room.DIRTY)
-						tile_state.setText("clean");
+						tile_state.setText("dirty");
 					else if(room.getCell()[i][j]==Room.WALL)
 						tile_state.setText("obstacle");
 					/*
@@ -127,7 +127,7 @@ public class JDomWriter {
 		base.addContent(yB);		
 		vacuum_istance.addContent(base);
 		
-		WriteToFile(document, "XML_TEST");
+		WriteToFile(document, filename);
 	}
 	
 	public void TestJDom() {
@@ -156,7 +156,7 @@ public class JDomWriter {
 	
 	public static void main(String[] args) {
 		JDomWriter jdw = new JDomWriter(new Room());
-		jdw.createXML();
+		jdw.createXML("XML_TEST");
 	}
 
 }

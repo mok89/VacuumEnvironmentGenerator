@@ -19,20 +19,20 @@ public class MenuListener implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		/*
-		if(e.getActionCommand().compareTo("Esci")==0) {
-			editorFrame.getMessage().saveProject();
-			editorFrame.dispose();
+		if(e.getActionCommand().compareTo("Exit")==0) {
+			//editorFrame.getMessage().saveProject();
+			//editorFrame.dispose();
 		}
+		/*
 		else if(e.getActionCommand().compareTo("Nuovo")==0)
 			editorFrame.newProject();
 		else if(e.getActionCommand().compareTo("Apri")==0)
 			editorFrame.openFile();
 		else if(e.getActionCommand().compareTo("Salva")==0)
 			editorFrame.saveFile();
-		else if(e.getActionCommand().compareTo("Salva con nome")==0)
-			editorFrame.saveAsFile();
 		*/
+		else if(e.getActionCommand().compareTo("Save As...")==0)
+			editorFrame.saveAsFile();
 	}
 	
 	EditorFrame editorFrame;

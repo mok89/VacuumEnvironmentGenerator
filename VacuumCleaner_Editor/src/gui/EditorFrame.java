@@ -5,17 +5,18 @@ import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.plaf.basic.BasicBorders.SplitPaneBorder;
 
+import core.JDomWriter;
 import core.Room;
 
 /**
@@ -54,6 +55,11 @@ public class EditorFrame extends JFrame {
 	JSplitPane js=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 	private Room room;
+	
+	private JFileChooser chooser;
+	private String filename;
+	
+	private JDomWriter jDomWriter;
 	
 	public EditorFrame() {
 		super();
@@ -143,6 +149,21 @@ public class EditorFrame extends JFrame {
 		js.setLeftComponent(editorPanel);
 		js.setRightComponent(buttonPanel);
 		this.add(js,BorderLayout.CENTER);
+	}
+	
+	public void saveAsFile() {
+		chooser = new JFileChooser();
+		final ExtensionFileFilter filter = new ExtensionFileFilter();
+		filter.addExtension("xml");
+		filter.setDescription("Environment (xml)");
+		chooser.setFileFilter(filter);
+		chooser.setCurrentDirectory(new File(".//environment"));
+		int result = chooser.showSaveDialog(saveAs);
+		if(result==JFileChooser.APPROVE_OPTION) {
+			filename = chooser.getSelectedFile().getName();
+			jDomWriter = new JDomWriter(room);
+			jDomWriter.createXML(filename);
+		}
 	}
 	
 	
