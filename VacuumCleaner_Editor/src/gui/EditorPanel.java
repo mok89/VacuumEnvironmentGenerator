@@ -29,6 +29,7 @@ public class EditorPanel extends JPanel {
 	private Image imgDirty;
 	private Image imgWall;
 	private Image imgBase;
+	private Image imgAgent;
 	
 	private MouseListener mouseListener;
 	
@@ -47,6 +48,7 @@ public class EditorPanel extends JPanel {
 			imgDirty = ImageIO.read(new File(".//img//polvere_625833.jpg"));
 			imgWall = ImageIO.read(new File(".//img//wall.jpg"));
 			imgBase = ImageIO.read(new File(".//img//base.jpg"));
+			imgAgent = ImageIO.read(new File(".//img//agent.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -90,6 +92,8 @@ public class EditorPanel extends JPanel {
 			room.setCell(positionY, positionX, Room.DIRTY);
 		else if(room.getCell()[positionY][positionX]==Room.DIRTY)
 			room.setCell(positionY, positionX, Room.WALL);
+		else if(room.getCell()[positionY][positionX]==Room.BASE)
+			room.setCell(positionY, positionX, Room.AGENT);
 		else
 			room.setCell(positionY, positionX, Room.CLEAN);
 		repaint();
@@ -106,6 +110,8 @@ public class EditorPanel extends JPanel {
 					g.drawImage(this.imgWall, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
 				else if(room.getCell()[i][j]==Room.BASE)
 					g.drawImage(this.imgBase, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
+				else if(room.getCell()[i][j]==Room.AGENT)
+					g.drawImage(this.imgAgent, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
 				g.drawRect(j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight());
 			}
 	}
