@@ -205,6 +205,17 @@ public class EditorFrame extends JFrame {
 	}
 	
 	public void saveAsFile() {
+		/*
+		 * UPDATE VARIABLES CLASS ROOM
+		 */
+		sizeTextField.setText(String.valueOf(room.getSize()));
+		room.setEnergy(Double.parseDouble(energyTextField.getText()));
+		room.setCost_move_up(Double.parseDouble(costMoveTextField.getText()));
+		room.setCost_move_down(Double.parseDouble(costMoveTextField.getText()));
+		room.setCost_move_left(Double.parseDouble(costMoveTextField.getText()));
+		room.setCost_move_right(Double.parseDouble(costMoveTextField.getText()));
+		room.setCost_suck(Double.parseDouble(costSuckTextField.getText()));
+		
 		chooser = new JFileChooser();
 		final ExtensionFileFilter filter = new ExtensionFileFilter();
 		filter.addExtension("xml");

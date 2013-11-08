@@ -85,7 +85,7 @@ public class EditorPanel extends JPanel {
 		repaint();
 	}
 	
-	public void setCell(int pixelWidth, int pixelHeight) {
+	public void setCell(int pixelWidth, int pixelHeight) {		
 		int positionX = getPositionX(pixelWidth);
 		int positionY = getPositionY(pixelHeight);
 		/*

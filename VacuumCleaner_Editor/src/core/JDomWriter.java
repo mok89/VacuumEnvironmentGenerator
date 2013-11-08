@@ -54,10 +54,6 @@ public class JDomWriter {
 		size.setText(String.valueOf(room.getSize()));
 		board.addContent(size);
 		Element tile_state;
-		room.setCell(5, 6, Room.WALL);
-		room.setCell(7, 8, Room.DIRTY);
-		room.setCell(2, 2, Room.BASE);
-		room.setCell(6, 3, Room.AGENT);
 		
 		int base_x=-1, base_y=-1;
 		int agent_x=-1, agent_y=-1;
