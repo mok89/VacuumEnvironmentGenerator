@@ -1,0 +1,10 @@
+./getEnv.pl OS=L Dt=10 Ob=10 N=10 Xb=1 Yb=2 Xa=8 Ya=9 NENV=3 >out
+
+dove:
+OS sta per il sistema operativo: W.exe per windows; L per Linux; A per Apple
+Dt sono le celle sporche 
+Ob sono le celle con ostacoli
+N è la size della griglia
+Xb Yb la posizione della base
+Xa Ya la posizione dell'agente
+NENV numero delle soluzioni che deve restituire
