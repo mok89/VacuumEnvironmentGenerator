@@ -168,6 +168,8 @@ public class Room {
 	public void randomizeCell() {
 //		Randomize r=new Randomize();
 //		r.randomize(cell, DEFAULT_SIZE);
+//		Randomize r=new Randomize();
+//		r.randomize(cell, size);
 	}
 	
 		
