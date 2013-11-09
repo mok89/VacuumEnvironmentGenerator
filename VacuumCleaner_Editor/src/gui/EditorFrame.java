@@ -6,6 +6,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -14,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
@@ -56,6 +58,7 @@ public class EditorFrame extends JFrame {
 	JTextField sizeTextField;
 	JTextField energyTextField;
 	JTextField percDirtyTextField;
+	JTextField percWallTextField;
 	JTextField percCleanTextField;
 	JTextField costMoveTextField;
 	JTextField costSuckTextField;
@@ -106,6 +109,12 @@ public class EditorFrame extends JFrame {
 		percDirtyTextField.setColumns(4);
 		optionPanel.add(percDirtyTextField);
 		
+		JLabel percWallLabel = new JLabel("% Wall");
+		optionPanel.add(percWallLabel);
+		percWallTextField = new JTextField(String.valueOf(room.getPerc_wall()));
+		percWallTextField.setColumns(4);
+		optionPanel.add(percWallTextField);
+		
 		JLabel percCleanLabel = new JLabel("% Clean");
 		optionPanel.add(percCleanLabel);
 		percCleanTextField = new JTextField(String.valueOf(room.getPerc_clean()));
@@ -128,9 +137,19 @@ public class EditorFrame extends JFrame {
 		randomize.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				room.randomizeCell();
-				editorPanel.repaint();
+				getAllItems();
+					ArrayList<int [][]> results=room.randomizeCell();
+					if(results!=null && results.size()>0)
+						room.setCell(results.get(results.size()-1));
+					else
+						JOptionPane.showMessageDialog(editorPanel, "Uguale a zero");
+					editorPanel.repaint();
 				super.mouseClicked(e);
+			}
+
+			private void getAllItems() {
+				room.setPerc_dirty(Double.parseDouble(percDirtyTextField.getText()));
+				room.setPerc_wall(Double.parseDouble(percWallTextField.getText()));
 			}
 		});
 		optionPanel.add(randomize);
@@ -198,7 +217,7 @@ public class EditorFrame extends JFrame {
 	}
 	
 	public void newProject() {
-		room = new Room(Integer.parseInt(sizeTextField.getText()), Double.parseDouble(energyTextField.getText()), Double.parseDouble(percDirtyTextField.getText()), Double.parseDouble(percCleanTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costSuckTextField.getText()));
+		room = new Room(Integer.parseInt(sizeTextField.getText()), Double.parseDouble(energyTextField.getText()), Double.parseDouble(percDirtyTextField.getText()),Double.parseDouble(percWallTextField.getText()), Double.parseDouble(percCleanTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costSuckTextField.getText()));
 		editorPanel.setRoom(room);
 		editorPanel.validate();
 		editorPanel.repaint();

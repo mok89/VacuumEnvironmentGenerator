@@ -22,7 +22,7 @@ do
 {
 $no="y";
 (($var)=$_=~/{([A-Za-z]*)}/);
-print "$var\n";
+#print "$var\n";
 $sost=$value{"$var"};
 #print "$sost";
 if(!($sost eq "")){
@@ -42,8 +42,8 @@ close(file);
 close(file2);
 $numeroEnv=$value{"NENV"};
 $NumeroSpazioSoluzioni=$numeroEnv*200+2;
-@resSet=`./$value{"OS"} -filter=agent,base,dirt,obstacle -n=$NumeroSpazioSoluzioni ./res/file2excec`;
-`zenity --info`;
+@resSet=`./res/$value{"OS"} -filter=agent,base,dirt,obstacle -n=$NumeroSpazioSoluzioni ./res/file2excec`;
+#`zenity --info`;
 `rm ./res/file2excec`;
 
 $points=int($NumeroSpazioSoluzioni/$numeroEnv);
