@@ -24,6 +24,7 @@ public class LocalVacuumEnvironmentPercept extends DynamicPercept {
 	public static final String ATTRIBUTE_INITIAL_ENERGY = "initialEnergy";
 	public static final String ATTRIBUTE_CURRENT_ENERGY = "currentEnergy";
 	public static final String ATTRIBUTE_ACTION_ENERGY_COST = "actionEnergyCost";
+	public static final String ATTRIBUTE_N = "N";
 
 	/**
 	 * Construct a vacuum environment percept from the agent's perception of the
@@ -35,7 +36,7 @@ public class LocalVacuumEnvironmentPercept extends DynamicPercept {
 			final Map<Point, VacuumEnvironment.LocationState> state,
 			final Point agentLocations, final Point baseLocation,
 			final double initialEnergy, final Double currentEnergy,
-			final Map<Action, Double> actionEnergyCosts) {
+			final Map<Action, Double> actionEnergyCosts, final int N) {
 
 		this.setAttribute(LocalVacuumEnvironmentPercept.ATTRIBUTE_STATE, state);
 		this.setAttribute(
@@ -53,6 +54,7 @@ public class LocalVacuumEnvironmentPercept extends DynamicPercept {
 		this.setAttribute(
 				LocalVacuumEnvironmentPercept.ATTRIBUTE_ACTION_ENERGY_COST,
 				actionEnergyCosts);
+		this.setAttribute(LocalVacuumEnvironmentPercept.ATTRIBUTE_N, N);
 
 	}
 
@@ -79,6 +81,11 @@ public class LocalVacuumEnvironmentPercept extends DynamicPercept {
 	public double getInitialEnergy() {
 		return (double) this
 				.getAttribute(LocalVacuumEnvironmentPercept.ATTRIBUTE_INITIAL_ENERGY);
+	}
+
+	public int getN() {
+		return (int) this
+				.getAttribute(LocalVacuumEnvironmentPercept.ATTRIBUTE_N);
 	}
 
 	public Map<Point, VacuumEnvironment.LocationState> getState() {
@@ -111,6 +118,7 @@ public class LocalVacuumEnvironmentPercept extends DynamicPercept {
 	 */
 	@Override
 	public String toString() {
+		// FIXME
 		final StringBuilder sb = new StringBuilder();
 		sb.append("[");
 		sb.append(this.getAgentLocation());
