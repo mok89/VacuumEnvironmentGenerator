@@ -166,17 +166,17 @@ public class VacuumEnvironmentState implements EnvironmentState,
 		final Point new_location = (Point) current_location.clone();
 
 		if (this.getActionFromName("left").equals(action)) {
-			if (current_location.x > 0)
-				new_location.x--;
-		} else if (this.getActionFromName("right").equals(action)) {
-			if (current_location.x < this.N - 1)
-				new_location.x++;
-		} else if (this.getActionFromName("up").equals(action)) {
 			if (current_location.y > 0)
 				new_location.y--;
-		} else if (this.getActionFromName("down").equals(action))
+		} else if (this.getActionFromName("right").equals(action)) {
 			if (current_location.y < this.N - 1)
 				new_location.y++;
+		} else if (this.getActionFromName("up").equals(action)) {
+			if (current_location.x > 0)
+				new_location.x--;
+		} else if (this.getActionFromName("down").equals(action))
+			if (current_location.x < this.N - 1)
+				new_location.x++;
 
 		if (this.state.get(new_location) != LocationState.Obstacle)
 			this.agentLocations.put(agent, new_location);
