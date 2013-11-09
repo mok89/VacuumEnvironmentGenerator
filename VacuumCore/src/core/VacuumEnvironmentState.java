@@ -84,7 +84,7 @@ public class VacuumEnvironmentState implements EnvironmentState,
 	public Action getActionFromName(final String actionName) {
 
 		for (final Action a : this.actionEnergyCosts.keySet())
-			if (((DynamicAction) a).getName() == actionName)
+			if (((DynamicAction) a).getName().equals(actionName))
 				return a;
 
 		return null;

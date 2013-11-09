@@ -61,9 +61,9 @@ public class VacuumEnvironment extends AbstractEnvironment {
 	public EnvironmentState executeAction(final Agent agent,
 			final Action agentAction) {
 
-		if (this.envState.getActionFromName("suck") == agentAction) {
-			if (LocationState.Dirty == this.envState
-					.getLocationState(this.envState.getAgentLocation(agent))) {
+		if (this.envState.getActionFromName("suck").equals(agentAction)) {
+			if (LocationState.Dirty.equals(this.envState
+					.getLocationState(this.envState.getAgentLocation(agent)))) {
 				this.envState.setLocationState(
 						this.envState.getAgentLocation(agent),
 						LocationState.Clean);
