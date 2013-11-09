@@ -73,18 +73,18 @@ public class LocalVacuumEnvironmentPercept extends DynamicPercept {
 				.getAttribute(LocalVacuumEnvironmentPercept.ATTRIBUTE_BASE_LOCATION);
 	}
 
-	public double getCurrentEnergy() {
-		return (double) this
+	public Double getCurrentEnergy() {
+		return (Double) this
 				.getAttribute(LocalVacuumEnvironmentPercept.ATTRIBUTE_CURRENT_ENERGY);
 	}
 
-	public double getInitialEnergy() {
-		return (double) this
+	public Double getInitialEnergy() {
+		return (Double) this
 				.getAttribute(LocalVacuumEnvironmentPercept.ATTRIBUTE_INITIAL_ENERGY);
 	}
 
-	public int getN() {
-		return (int) this
+	public Integer getN() {
+		return (Integer) this
 				.getAttribute(LocalVacuumEnvironmentPercept.ATTRIBUTE_N);
 	}
 

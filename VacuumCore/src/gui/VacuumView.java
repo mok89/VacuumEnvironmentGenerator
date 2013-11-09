@@ -91,32 +91,32 @@ public class VacuumView extends EmptyEnvironmentView {
 		for (int i = 0; i < this.getN(); i++)
 			for (int j = 0; j < this.getN(); j++) {
 				if (this.getLocationState(i, j) == LocationState.Dirty)
-					g.drawImage(this.imgDirty, i * this.optimalSizeCellSize(),
-							j * this.optimalSizeCellSize(),
+					g.drawImage(this.imgDirty, j * this.optimalSizeCellSize(),
+							i * this.optimalSizeCellSize(),
 							this.optimalSizeCellSize(),
 							this.optimalSizeCellSize(), null);
 				if (this.getLocationState(i, j) == LocationState.Obstacle)
 					g.drawImage(this.imgObstacle,
-							i * this.optimalSizeCellSize(),
 							j * this.optimalSizeCellSize(),
+							i * this.optimalSizeCellSize(),
 							this.optimalSizeCellSize(),
 							this.optimalSizeCellSize(), null);
 				if (this.isBase(i, j))
-					g.drawImage(this.imgBase, i * this.optimalSizeCellSize(), j
+					g.drawImage(this.imgBase, j * this.optimalSizeCellSize(), i
 							* this.optimalSizeCellSize(),
 							this.optimalSizeCellSize(),
 							this.optimalSizeCellSize(), null);
 				if (this.isAgentPosition(i, j))
 					g.drawImage(
 							this.imgAgent,
-							i * this.optimalSizeCellSize()
-									+ this.optimalSizeCellSize() / 6,
 							j * this.optimalSizeCellSize()
+									+ this.optimalSizeCellSize() / 6,
+							i * this.optimalSizeCellSize()
 									+ this.optimalSizeCellSize() / 6,
 							this.optimalSizeCellSize() * 2 / 3,
 							this.optimalSizeCellSize() * 2 / 3, null);
-				g.drawRect(i * this.optimalSizeCellSize(),
-						j * this.optimalSizeCellSize(),
+				g.drawRect(j * this.optimalSizeCellSize(),
+						i * this.optimalSizeCellSize(),
 						this.optimalSizeCellSize(), this.optimalSizeCellSize());
 			}
 	}
