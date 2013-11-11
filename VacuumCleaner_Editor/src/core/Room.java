@@ -186,12 +186,16 @@ public class Room {
 		return true;
 	}
 
+	@Deprecated
 	public ArrayList<int [][]> randomizeCell() {
 		Randomize r=new Randomize(size, (int)getPerc_dirty(), (int)getPerc_wall(), 3, getPointAgent(), getPointBase());
-		ArrayList<int [][]>results=new ArrayList<int [][]>();
+		return r.randomize();
+//		return r.randomize();
+		
+	}
+	public void randomize() {
+		Randomize r=new Randomize(size, (int)getPerc_dirty(), (int)getPerc_wall(), 3, getPointAgent(), getPointBase());
 		r.randomize(cell,size);
-		results.add(cell);
-		return results;
 //		return r.randomize();
 		
 	}

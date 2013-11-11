@@ -138,11 +138,12 @@ public class EditorFrame extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				getAllItems();
-					ArrayList<int [][]> results=room.randomizeCell();
-					if(results!=null && results.size()>0)
-						room.setCell(results.get(results.size()-1));
-					else
-						JOptionPane.showMessageDialog(editorPanel, "Uguale a zero");
+//					ArrayList<int [][]> results=room.randomizeCell();
+//					if(results!=null && results.size()>0)
+//						room.setCell(results.get(results.size()-1));
+//					else
+//						JOptionPane.showMessageDialog(editorPanel, "Uguale a zero");
+				room.randomize();
 					editorPanel.repaint();
 				super.mouseClicked(e);
 			}

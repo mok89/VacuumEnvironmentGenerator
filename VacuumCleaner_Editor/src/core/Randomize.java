@@ -125,7 +125,7 @@ public class Randomize {
 								dit++;
 							}
 						}
-						System.out.println(dit+" "+ob);
+//						System.out.println(dit+" "+ob);
 						results.add(cell);
 					}
 				}
@@ -145,15 +145,16 @@ public class Randomize {
 	public void randomize(int[][] cell, int size){
 		boolean baseIsLocated=false;
 				int r;
+//				System.out.println(numberTielsWithDirt+" dirt");
 				for(int i=0;i<size;i++){
 					for(int j=0;j<size;j++){
 						r=(int) ((Math.random()*100)%100);
 						if(!baseIsLocated && r>50 && r<55){
 							cell[i][j]=Room.BASE;
 							baseIsLocated=true;
-						}else if(r>90){
+						}else if(r>100-numberTielsWithDirt){
 							cell[i][j]=Room.DIRTY;
-						}else if(r<30){
+						}else if(r<numberTielsAsObstacle){
 							cell[i][j]=Room.WALL;
 						}else
 							cell[i][j]=Room.CLEAN;
