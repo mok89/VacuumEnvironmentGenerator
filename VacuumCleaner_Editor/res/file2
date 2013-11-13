@@ -1,0 +1,85 @@
+% d number of dirty tiels
+% o number of obstacle
+
+d(1..{Dt}).
+o(1..{Ob}).
+r(1..{N}).
+c(1..{N}).
+
+base({Xb},{Yb}).
+agent({Xa},{Ya}).
+
+%devono essere tutte inserite sia le dirt tiles e gli ostacoli
+:-not #count{N:obstacle(X,Y,N)}={OB}.
+:-not #count{N:dirt(X,Y,N)}={DT}.
+
+cell(X,Y):-r(X),c(Y).
+dirt(X,Y,S) v nodirt(X,Y,S):-cell(X,Y),d(S).
+obstacle(X,Y,S) v noobstacle(X,Y,S):-cell(X,Y),o(S).
+
+%non è possibile che ci sia una stessa cella con sporco e ostacolo
+:-dirt(X,Y,_), obstacle(X,Y2,_),Y=Y2.
+:-dirt(X,Y,_), obstacle(X2,Y,_),X=X2.
+:-dirt(X,Y,_), obstacle(X2,Y2,_),X=X2,Y=Y2.
+
+%non deve essere possibile avere lo stesso sporco o ostacolo in due celle diverse
+%sporco
+:-dirt(X,Y,S),dirt(X,Y2,S),Y!=Y2.
+:-dirt(X,Y,S),dirt(X2,Y,S),X!=X2.
+:-dirt(X,Y,S),dirt(X2,Y2,S),X!=X2,Y!=Y2.
+%sporco in due celle lo stesso sporco
+:-dirt(X,Y,S),dirt(X,Y,S2),S!=S2.
+%ostacolo
+:-obstacle(X,Y,S),obstacle(X,Y2,S),Y!=Y2.
+:-obstacle(X,Y,S),obstacle(X2,Y,S),X!=X2.
+:-obstacle(X,Y,S),obstacle(X2,Y2,S),X!=X2,Y!=Y2.
+%ostacolo in due celle lo stesso ostacolo
+:-obstacle(X,Y,S),obstacle(X,Y,S2),S!=S2.
+
+
+%Assegnamento una base ed un agente
+
+%base(X,Y) v nonbase(X,Y):-cell(X,Y).
+%agent(X,Y) v nonagent(X,Y):-cell(X,Y).
+
+%:-agent(X,Y),agent(X,Y2),Y!=Y2.
+%:-agent(X,Y),agent(X2,Y),X!=X2.
+%:-agent(X,Y),agent(X2,Y2),Y!=Y2,X!=X2.
+%:-base(X,Y),base(X,Y2),Y!=Y2.
+%:-base(X,Y),base(X2,Y),X!=X2.
+%:-base(X,Y),base(X2,Y2),Y!=Y2,X!=X2.
+
+
+%in una cella dove c'è l'agente non deve esserci ne base ne ostacolo
+
+:-base(X,Y),dirt(X,Y,_).
+:-base(X,Y),obstacle(X,Y,_).
+
+%:-agent(X,Y),dirt(X,Y,_).
+:-agent(X,Y),obstacle(X,Y,_).
+
+%:-base(X,Y),agent(X,Y).
+:-base(X,Y),agent(X,Y).
+
+:-not #count{X,Y:agent(X,Y)}=1.
+:-not #count{X,Y:base(X,Y)}=1.
+
+
+%raggiungibilità
+reachA(X,Y):-agent(X,Y).
+reachA(K,Z):-reachA(X,Y),vicino(X,Y,K,Z).
+
+obstacleta(X,Y):-obstacle(X,Y,_).
+nonOstacoli(X,Y):-cell(X,Y),not obstacleta(X,Y).
+
+vicino(X,Y,X,Y2):-nonOstacoli(X,Y2),Y2=Y+1, nonOstacoli(X,Y).
+vicino(X,Y,X,Y2):-nonOstacoli(X,Y2),Y2=Y-1, nonOstacoli(X,Y).
+vicino(X,Y,X2,Y):-nonOstacoli(X2,Y),X2=X+1, nonOstacoli(X,Y).
+vicino(X,Y,X2,Y):-nonOstacoli(X2,Y),X2=X-1, nonOstacoli(X,Y).
+
+:-base(X,Y),not reachA(X,Y).
+
+
+
+
+

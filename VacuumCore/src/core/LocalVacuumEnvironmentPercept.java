@@ -89,8 +89,7 @@ public class LocalVacuumEnvironmentPercept extends DynamicPercept {
 	}
 
 	public Map<Point, VacuumEnvironment.LocationState> getState() {
-		return (Map<Point, VacuumEnvironment.LocationState>) this
-				.getAttribute(LocalVacuumEnvironmentPercept.ATTRIBUTE_STATE);
+		return (Map<Point, VacuumEnvironment.LocationState>) this.getAttribute(LocalVacuumEnvironmentPercept.ATTRIBUTE_STATE);
 	}
 
 	/**
@@ -105,8 +104,7 @@ public class LocalVacuumEnvironmentPercept extends DynamicPercept {
 		// FIXME
 		if (!this.getAgentLocation().equals(state.getAgentLocation(agent)))
 			return false;
-		if (!this.getState().equals(
-				state.getLocationState(this.getAgentLocation())))
+		if (!this.getState().equals(state.getLocationState(this.getAgentLocation())))
 			return false;
 		return true;
 	}

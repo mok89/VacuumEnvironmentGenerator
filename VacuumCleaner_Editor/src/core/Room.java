@@ -1,5 +1,8 @@
 package core;
 
+import java.awt.Point;
+import java.util.ArrayList;
+
 /**
  * 
  * @author fabrizio
@@ -11,6 +14,7 @@ public class Room {
 	public static final int DEFAULT_SIZE = 10;
 	public static final double DEFAULT_ENERGY = 100;
 	public static final double DEFAULT_PERC_DIRTY = 10;
+	public static final double DEFAULT_PERC_WALL = 10;
 	public static final double DEFAULT_PERC_CLEAN = 10;
 	public static final double DEFAULT_COST_MOVE_UP = 1;
 	public static final double DEFAULT_COST_MOVE_DOWN = 1;
@@ -25,9 +29,15 @@ public class Room {
 	public static final int AGENT = -2;
 	
 	private int[][] cell;
+	public void setCell(int[][] cell) {
+		this.cell = cell;
+	}
+
 	private int size;
 	private double energy;
 	private double perc_dirty;
+	private double perc_wall;
+	
 	private double perc_clean;
 	private double cost_move_up;
 	private double cost_move_down;
@@ -39,6 +49,7 @@ public class Room {
 		this.size=DEFAULT_SIZE;
 		this.energy=DEFAULT_ENERGY;
 		this.perc_dirty=DEFAULT_PERC_DIRTY;
+		this.perc_wall=DEFAULT_PERC_WALL;
 		this.perc_clean=DEFAULT_PERC_CLEAN;
 		this.cost_move_up=DEFAULT_COST_MOVE_UP;
 		this.cost_move_down=DEFAULT_COST_MOVE_DOWN;
@@ -51,10 +62,11 @@ public class Room {
 				cell[i][j] = CLEAN;
 	}
 	
-	public Room(int size, double energy, double perc_dirty, double perc_clean, double cost_move_up, double cost_move_down, double cost_move_left, double cost_move_right, double cost_suck) {
+	public Room(int size, double energy, double perc_dirty,double perc_wall, double perc_clean, double cost_move_up, double cost_move_down, double cost_move_left, double cost_move_right, double cost_suck) {
 		this.size=size;
 		this.energy=energy;
 		this.perc_dirty=perc_dirty;
+		this.perc_wall=perc_wall;
 		this.perc_clean=perc_clean;
 		this.cost_move_up=cost_move_up;
 		this.cost_move_down=cost_move_down;
@@ -104,6 +116,15 @@ public class Room {
 	public void setPerc_dirty(double perc_dirty) {
 		this.perc_dirty = perc_dirty;
 	}
+	
+	public double getPerc_wall() {
+		return perc_wall;
+	}
+
+	public void setPerc_wall(double perc_wall) {
+		this.perc_wall = perc_wall;
+	}
+
 
 	public double getPerc_clean() {
 		return perc_clean;
@@ -165,12 +186,62 @@ public class Room {
 		return true;
 	}
 
-	public void randomizeCell() {
-//		Randomize r=new Randomize();
-//		r.randomize(cell, DEFAULT_SIZE);
-//		Randomize r=new Randomize();
-//		r.randomize(cell, size);
+	@Deprecated
+	public ArrayList<int [][]> randomizeCell() {
+		Randomize r=new Randomize(size, (int)getPerc_dirty(), (int)getPerc_wall(), 3, getPointAgent(), getPointBase());
+		return r.randomize();
+//		return r.randomize();
+		
+	}
+	public void randomize() {
+		Randomize r=new Randomize(size, (int)getPerc_dirty(), (int)getPerc_wall(), 3, getPointAgent(), getPointBase());
+		r.randomize(cell,size);
+//		return r.randomize();
+		
+	}
+
+	public boolean isAgent() {
+		for(int i=0;i<size;i++){
+			for(int j=0;j<size;j++){
+				if(cell[i][j]==Room.AGENT){
+					return true;
+				}
+			}	
+		}
+		return false;
+	}
+
+	public boolean isBase() {
+		for(int i=0;i<size;i++){
+			for(int j=0;j<size;j++){
+				if(cell[i][j]==Room.BASE){
+					return true;
+				}
+			}	
+		}
+		return false;
 	}
 	
+	public Point getPointAgent() {
+		for(int i=0;i<size;i++){
+			for(int j=0;j<size;j++){
+				if(cell[i][j]==Room.AGENT){
+					return new Point(i,j);
+				}
+			}	
+		}
+		return null;
+	}
+
+	public Point getPointBase() {
+		for(int i=0;i<size;i++){
+			for(int j=0;j<size;j++){
+				if(cell[i][j]==Room.BASE){
+					return new Point(i,j);
+				}
+			}	
+		}
+		return null;
+	}
 		
 }
