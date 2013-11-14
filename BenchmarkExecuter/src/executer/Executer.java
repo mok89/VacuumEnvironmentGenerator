@@ -17,6 +17,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import aima.core.agent.impl.AbstractAgent;
+import aima.core.environment.vacuum.VacuumEnvironmentState;
 import instanceXMLParser.Instance;
 import core.VacuumEnvironment;
 
@@ -56,6 +57,8 @@ public class Executer {
 			PrintWriter writer = new PrintWriter(
 					"PerformanceMeasures/performanceMeasures.csv");
 
+			writer.println(";Cleaned tiles;Current energy;Dirty initial tiles;Initial energy;Performance measure");
+			
 			for (String jar : jars) {
 				try {
 					URL jarURL = new URL("jar", "", "file:"
@@ -99,14 +102,19 @@ public class Executer {
 						}
 
 						if (theAgentTakeTooTime) {
-							writer.println(xml + ";" + "Execution take too time" + ";");
+							writer.println(xml + ";"
+									+ "Execution take too time" + ";");
 						} else {
 
-							System.out.println("Performance measure: "
-									+ enviroment.getPerformanceMeasure(agent));
-							writer.println(xml + ";"
+							core.VacuumEnvironmentState state = enviroment
+									.getEnvState();
+							String result = state.getCleanedTiles(agent) + ";"
+									+ state.getCurrentEnergy(agent) + ";"
+									+ state.getDirtyInitialTiles() + ";"
+									+ state.getInitialEnergy() + ";"
 									+ enviroment.getPerformanceMeasure(agent)
-									+ ";");
+									+ ";";
+							writer.println(xml + ";" + result);
 						}
 					}
 

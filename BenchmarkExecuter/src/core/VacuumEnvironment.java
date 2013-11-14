@@ -37,6 +37,12 @@ public class VacuumEnvironment extends AbstractEnvironment {
 	};
 
 	protected VacuumEnvironmentState envState = null;
+	
+	
+	public VacuumEnvironmentState getEnvState() {
+		return envState;
+	}
+
 	protected boolean isDone = false;
 
 	/**
@@ -127,10 +133,8 @@ public class VacuumEnvironment extends AbstractEnvironment {
 		final double E0 = this.envState.getInitialEnergy();
 		final double CT = this.envState.getCleanedTiles(agent);
 		final double D0 = this.envState.getDirtyInitialTiles();
-
 		final Double performanceMeasure = Math.ceil((ET - BdT + 1) / (E0 + 1))
 				* (CT + 1) / (D0 + 1) * (1 + (ET + 1) / (E0 + 1));
-
 		this.performanceMeasures.put(agent, performanceMeasure);
 
 	}
