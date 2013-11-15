@@ -179,8 +179,8 @@ public class Room {
 		 * Only one base
 		 * if the base it is present return false, true otherwise
 		 */
-		for(int i=0; i<DEFAULT_SIZE; i++)
-			for(int j=0; j<DEFAULT_SIZE; j++)
+		for(int i=0; i<size; i++)
+			for(int j=0; j<size; j++)
 				if(cell[i][j]==Room.BASE)
 					return false;
 		return true;
