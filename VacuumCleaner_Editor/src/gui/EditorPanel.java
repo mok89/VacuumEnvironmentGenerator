@@ -8,7 +8,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import core.Room;
 
@@ -46,8 +48,9 @@ public class EditorPanel extends JPanel {
 
 	private MouseListener mouseListener;
 
-	public EditorPanel(Room room) {
+	public EditorPanel(Room room, EditorFrame editorFrame) {
 		this.room = room;
+
 		this.setVisible(true);
 		this.setBackground(Color.WHITE);
 		uploadPictures();
@@ -132,6 +135,15 @@ public class EditorPanel extends JPanel {
 					g.drawImage(this.imgAgent, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
 				g.drawRect(j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight());
 			}
+//		JSplitPane jSplitPane = (JSplitPane)this.getParent();
+//				System.out.println(jSplitPane.getDividerLocation());
+//		if(jSplitPane.getDividerSize()!=587){
+//			JPanel frame=(JPanel)((JSplitPane)jSplitPane.getParent()).getParent();
+//			jSplitPane.setDividerLocation(587);;
+//		}
+//		System.out.println(jSplitPane.getDividerSize());
+		//		System.out.println(frame.getHeight()-frame.getHeight()/10);
+		//		getHeight()-getHeight()/10
 	}
 
 }

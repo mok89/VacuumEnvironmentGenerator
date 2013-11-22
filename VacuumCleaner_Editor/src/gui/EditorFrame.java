@@ -3,9 +3,14 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -13,6 +18,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -76,7 +82,8 @@ public class EditorFrame extends JFrame {
 	JTextField costSuckTextField;
 
 	JPanel optionPanel =new JPanel(new FlowLayout());
-	JPanel selectionPanel=new JPanel(new GridLayout(rowSelectionPanel,columSelectionPanel));
+	//	JPanel selectionPanel=new JPanel(new GridLayout(rowSelectionPanel,columSelectionPanel));
+	JPanel selectionPanel=new JPanel(new BorderLayout());
 
 	JSplitPane js=new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 	JSplitPane jsMain=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -96,7 +103,7 @@ public class EditorFrame extends JFrame {
 		setCenterScreen();
 		setMenu();
 		room =new Room();
-		editorPanel = new EditorPanel(room);
+		editorPanel = new EditorPanel(room,this);
 		conteiner();
 		initOptionPanel();
 		intSelectionPanel();
@@ -106,25 +113,27 @@ public class EditorFrame extends JFrame {
 	}
 
 	private void intSelectionPanel() {
-		addLabelVoid(4);
+		JPanel panelSelectionPanel=new JPanel(new GridBagLayout());
+		GridBagConstraints c=new GridBagConstraints();
+		c.gridx=0;
+		c.gridy=0;
 		JButton cleanButton=new JButton();
+		cleanButton.setPreferredSize(new Dimension(40, 40));
 		cleanButton.setBackground(Color.white);
-		selectionPanel.add(cleanButton);
-		addLabelVoid(5);
-		JButton agentButton=new JButton(new ImageIcon("./img/agent.png"));
-		selectionPanel.add(agentButton);
-		addLabelVoid(5);
-		JButton dirtButton=new JButton(new ImageIcon("./img/polvere_625833.jpg"));
-		selectionPanel.add(dirtButton);
-		addLabelVoid(5);
-		JButton wallButton=new JButton(new ImageIcon("./img/wall.jpg"));
-		selectionPanel.add(wallButton);
-		addLabelVoid(5);
-		JButton baseButton=new JButton(new ImageIcon("./img/base.jpg"));
-		selectionPanel.add(baseButton);
-		addLabelVoid(4);
-		addLabelVoid(3);
-		addLabelVoid(3);
+		panelSelectionPanel.add(cleanButton,c);
+		c.gridy++;
+		c.weightx=5;c.weighty=5;
+		JButton agentButton=new JButton(new ImageIcon(new ImageIcon("./img/agent.png").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+		panelSelectionPanel.add(agentButton,c);
+		c.gridy++;
+		JButton dirtButton=new JButton(new ImageIcon(new ImageIcon("./img/polvere_625833.jpg").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+		panelSelectionPanel.add(dirtButton,c);
+		c.gridy++;c.weightx=5;c.weighty=5;
+		JButton wallButton=new JButton(new ImageIcon(new ImageIcon("./img/wall.jpg").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+		panelSelectionPanel.add(wallButton,c);
+		c.gridy++;c.weightx=5;c.weighty=5;
+		JButton baseButton=new JButton(new ImageIcon(new ImageIcon("./img/base.jpg").getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH)));
+		panelSelectionPanel.add(baseButton,c);
 		/**
 		 * listener on the button
 		 */
@@ -163,15 +172,9 @@ public class EditorFrame extends JFrame {
 				editorPanel.setItemSelected(Room.BASE);
 			}
 		});
-
+		selectionPanel.add(panelSelectionPanel,BorderLayout.CENTER);
 	}
 
-
-	private void addLabelVoid(int n){
-		for (int i = 0; i < n; i++) {
-			selectionPanel.add(new JLabel());
-		}
-	}
 
 	private void initOptionPanel() {
 
@@ -244,7 +247,7 @@ public class EditorFrame extends JFrame {
 			public void keyTyped(KeyEvent e) {
 				super.keyTyped(e);
 				if(e.getKeyChar()=='\n')
-				changeMatrix(sizeTextN.getText().toString(),sizeTextM.getText().toString());
+					changeMatrix(sizeTextN.getText().toString(),sizeTextM.getText().toString());
 			}
 		});
 		sizeTextM.addKeyListener(new KeyAdapter() {
@@ -252,7 +255,7 @@ public class EditorFrame extends JFrame {
 			public void keyTyped(KeyEvent e) {
 				super.keyTyped(e);
 				if(e.getKeyChar()=='\n')
-				changeMatrix(sizeTextN.getText().toString(),sizeTextM.getText().toString());
+					changeMatrix(sizeTextN.getText().toString(),sizeTextM.getText().toString());
 			}
 		});
 
@@ -358,13 +361,16 @@ public class EditorFrame extends JFrame {
 	private void conteiner() {
 		this.setLayout(new BorderLayout());
 		js.setDividerLocation(getWidth()-getWidth()/4);
-		js.setLeftComponent(editorPanel);
+		js.setLeftComponent(jsMain);
+		//		js.setRightComponent(optionPanel);
 		js.setRightComponent(optionPanel);
 
 		jsMain.setDividerLocation(getHeight()-getHeight()/10);
-		jsMain.setLeftComponent(js);
+		jsMain.setLeftComponent(editorPanel);
+//		jsMain.setDividerLocation((double)0.90);
+		//		jsMain.setRightComponent(selectionPanel);
 		jsMain.setRightComponent(selectionPanel);
-		this.add(jsMain,BorderLayout.CENTER);
+		this.add(js,BorderLayout.CENTER);
 	}
 
 	public void newProject() {
@@ -405,6 +411,10 @@ public class EditorFrame extends JFrame {
 	public static void main(String[] args) {
 		EditorFrame ef = new EditorFrame();
 		ef.setVisible(true);
+	}
+
+	public void openFile() {
+		//TODO
 	}
 
 }
