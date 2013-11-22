@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 
 import core.JDomWriter;
 import core.Room;
+import core.Tile;
 
 /**
  * 
@@ -283,13 +284,14 @@ public class EditorFrame extends JFrame {
 			Integer sizeN=Integer.valueOf(sizN);
 			Integer sizeM=Integer.valueOf(sizM);
 			if(sizeN>1 && sizeM>1){
-				int[][] cell = new int[sizeN][sizeM];
+				Tile[][] cell = new Tile[sizeN][sizeM];
 				for(int i=0; i<sizeN; i++)
 					for(int j=0; j<sizeM; j++){
 						if(i<room.getSizeN() && j<room.getSizeM())
 							cell[i][j] = room.getAt(i, j);
-						else
-							cell[i][j] = Room.CLEAN;
+						else{
+							cell[i][j]=new Tile(Room.CLEAN, 1);
+						}
 					}
 				room.setCell(cell);
 				room.setSizeN(sizeN);

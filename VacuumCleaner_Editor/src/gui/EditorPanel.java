@@ -105,11 +105,11 @@ public class EditorPanel extends JPanel {
 		System.out.println("x: " + positionX);
 		System.out.println("y: " + positionY);
 		 */
-		if(room.getCell()[positionY][positionX]==Room.CLEAN)
+		if(room.getCell()[positionY][positionX].getState()==Room.CLEAN)
 			room.setCell(positionY, positionX, Room.DIRTY);
-		else if(room.getCell()[positionY][positionX]==Room.DIRTY)
+		else if(room.getCell()[positionY][positionX].getState()==Room.DIRTY)
 			room.setCell(positionY, positionX, Room.WALL);
-		else if(room.getCell()[positionY][positionX]==Room.WALL)
+		else if(room.getCell()[positionY][positionX].getState()==Room.WALL)
 			room.setCell(positionY, positionX, Room.AGENT);
 		else
 			room.setCell(positionY, positionX, Room.CLEAN);
@@ -121,13 +121,14 @@ public class EditorPanel extends JPanel {
 		super.paintComponent(g);
 		for(int i=0; i<room.getSizeN(); i++)
 			for(int j=0; j<room.getSizeM(); j++) {
-				if(room.getCell()[i][j]==Room.DIRTY)
+				if(room.getCell()[i][j].getState()==Room.DIRTY){
 					g.drawImage(this.imgDirty, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
-				else if(room.getCell()[i][j]==Room.WALL)
+					g.drawString(room.getCell()[i][j].getValue()+"", j*this.optimalSizeCellWidth()+2, i*this.optimalSizeCellHeight()+12);
+				}else if(room.getCell()[i][j].getState()==Room.WALL)
 					g.drawImage(this.imgWall, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
-				else if(room.getCell()[i][j]==Room.BASE)
+				else if(room.getCell()[i][j].getState()==Room.BASE)
 					g.drawImage(this.imgBase, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
-				else if(room.getCell()[i][j]==Room.AGENT)
+				else if(room.getCell()[i][j].getState()==Room.AGENT)
 					g.drawImage(this.imgAgent, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
 				g.drawRect(j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight());
 			}

@@ -140,7 +140,7 @@ public class Randomize {
 //		return null;
 //	}
 	
-	public void randomize(int[][] cell, int sizeN, int sizeM){
+	public void randomize(Tile[][] cell, int sizeN, int sizeM){
 		boolean baseIsLocated=false;
 				int r;
 //				System.out.println(numberTielsWithDirt+" dirt");
@@ -148,20 +148,22 @@ public class Randomize {
 					for(int j=0;j<sizeM;j++){
 						r=(int) ((Math.random()*100)%100);
 						if(!baseIsLocated && r>50 && r<55){
-							cell[i][j]=Room.BASE;
+							cell[i][j].setState(Room.BASE);
 							baseIsLocated=true;
 						}else if(r>100-numberTielsWithDirt){
-							cell[i][j]=Room.DIRTY;
+							cell[i][j].setState(Room.DIRTY);
+							int rv=(int) ((Math.random()*100)%4)+1;
+							cell[i][j].setValue(rv);
 						}else if(r<numberTielsAsObstacle){
-							cell[i][j]=Room.WALL;
+							cell[i][j].setState(Room.WALL);
 						}else
-							cell[i][j]=Room.CLEAN;
+							cell[i][j].setState(Room.CLEAN);
 					}
 				}
 				if(!baseIsLocated){
 					r=(int) ((Math.random()*100)%sizeN);
 					int c=(int) ((Math.random()*100)%sizeM);
-					cell[r][c]=Room.BASE;
+					cell[r][c].setState(Room.BASE);
 					baseIsLocated=true;
 				}
 	}

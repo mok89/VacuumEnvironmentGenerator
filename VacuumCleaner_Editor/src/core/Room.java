@@ -27,8 +27,8 @@ public class Room {
 	public static final int BASE = -1;
 	public static final int AGENT = -2;
 
-	private int[][] cell;
-	public void setCell(int[][] cell) {
+	private Tile[][] cell;
+	public void setCell(Tile[][] cell) {
 		this.cell = cell;
 	}
 
@@ -58,10 +58,11 @@ public class Room {
 		this.cost_move_left=DEFAULT_COST_MOVE_LEFT;
 		this.cost_move_right=DEFAULT_COST_MOVE_RIGHT;
 		this.cost_suck=DEFAULT_COST_SUCK;
-		cell = new int[sizeN][sizeM];
+		cell = new Tile[sizeN][sizeM];
 		for(int i=0; i<sizeN; i++)
-			for(int j=0; j<sizeM; j++)
-				cell[i][j] = CLEAN;
+			for(int j=0; j<sizeM; j++){
+				cell[i][j]=new Tile(CLEAN, 1);
+			}
 	}
 
 	public Room(int sizeN,int sizeM, double energy, double perc_dirty,double perc_wall, double perc_clean, double cost_move_up, double cost_move_down, double cost_move_left, double cost_move_right, double cost_suck) {
@@ -76,13 +77,13 @@ public class Room {
 		this.cost_move_left=cost_move_left;
 		this.cost_move_right=cost_move_right;
 		this.cost_suck=cost_suck;
-		cell = new int[sizeN][sizeM];
+		cell = new Tile[sizeN][sizeM];
 		for(int i=0; i<sizeN; i++)
 			for(int j=0; j<sizeM; j++)
-				cell[i][j] = CLEAN;
+				cell[i][j].setState(CLEAN);
 	}
 
-	public int[][] getCell() {
+	public Tile[][] getCell() {
 		return cell;
 	}
 
@@ -90,10 +91,10 @@ public class Room {
 		try{
 			if(state==Room.BASE) {
 				if(thereIsOneBase())
-					cell[i][j]=state;
+					cell[i][j].setState(state);;
 			}
 			else {
-				cell[i][j]=state;
+				cell[i][j].setState(state);;
 			}
 		}catch(Exception e){}
 	}
@@ -194,7 +195,7 @@ public class Room {
 		 */
 		for(int i=0; i<sizeN; i++)
 			for(int j=0; j<sizeM; j++)
-				if(cell[i][j]==Room.BASE)
+				if(cell[i][j].getState()==Room.BASE)
 					return false;
 		return true;
 	}
@@ -209,7 +210,7 @@ public class Room {
 	public boolean isAgent() {
 		for(int i=0;i<sizeN;i++){
 			for(int j=0;j<sizeM;j++){
-				if(cell[i][j]==Room.AGENT){
+				if(cell[i][j].getState()==Room.AGENT){
 					return true;
 				}
 			}	
@@ -220,7 +221,7 @@ public class Room {
 	public boolean isBase() {
 		for(int i=0;i<sizeN;i++){
 			for(int j=0;j<sizeM;j++){
-				if(cell[i][j]==Room.BASE){
+				if(cell[i][j].getState()==Room.BASE){
 					return true;
 				}
 			}	
@@ -231,7 +232,7 @@ public class Room {
 	public Point getPointAgent() {
 		for(int i=0;i<sizeN;i++){
 			for(int j=0;j<sizeM;j++){
-				if(cell[i][j]==Room.AGENT){
+				if(cell[i][j].getState()==Room.AGENT){
 					return new Point(i,j);
 				}
 			}	
@@ -242,7 +243,7 @@ public class Room {
 	public Point getPointBase() {
 		for(int i=0;i<sizeN;i++){
 			for(int j=0;j<sizeM;j++){
-				if(cell[i][j]==Room.BASE){
+				if(cell[i][j].getState()==Room.BASE){
 					return new Point(i,j);
 				}
 			}	
@@ -250,7 +251,7 @@ public class Room {
 		return null;
 	}
 
-	public int getAt(int x,int y){
+	public Tile getAt(int x,int y){
 		return cell[x][y];
 	}
 	
