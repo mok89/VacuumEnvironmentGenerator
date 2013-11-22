@@ -19,20 +19,33 @@ import core.Room;
  */
 
 public class EditorPanel extends JPanel {
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
+	/**
+	 * modifiche mok
+	 */
+	private int itemSelected=0;
+
+	public int getItemSelected() {
+		return itemSelected;
+	}
+
+	public void setItemSelected(int itemSelected) {
+		this.itemSelected = itemSelected;
+	}
+
 	private Room room;
 	private Image imgDirty;
 	private Image imgWall;
 	private Image imgBase;
 	private Image imgAgent;
-	
+
 	private MouseListener mouseListener;
-	
+
 	public EditorPanel(Room room) {
 		this.room = room;
 		this.setVisible(true);
@@ -42,7 +55,7 @@ public class EditorPanel extends JPanel {
 		addMouseMotionListener(mouseListener);
 		addMouseListener(mouseListener);
 	}
-	
+
 	public void setRoom(Room room) {
 		this.room = room;
 	}
@@ -57,41 +70,41 @@ public class EditorPanel extends JPanel {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int optimalSizeCellWidth() {
-		return (this.getWidth()/room.getSize());
+		return (this.getWidth()/room.getSizeM());
 	}
-	
+
 	public int optimalSizeCellHeight() {
-		return (this.getHeight()/room.getSize());
+		return (this.getHeight()/room.getSizeN());
 	}
-	
+
 	private int getPositionX(int pixelWidth) {
 		return (pixelWidth/optimalSizeCellWidth());
 	}
-	
+
 	private int getPositionY(int pixelHeight) {
 		return (pixelHeight/optimalSizeCellHeight());
 	}
-	
+
 	public void setCell(int pixelWidth, int pixelHeight, int state) {
 		int positionX = getPositionX(pixelWidth);
 		int positionY = getPositionY(pixelHeight);
 		/*
 		System.out.println("x: " + positionX);
 		System.out.println("y: " + positionY);
-		*/
+		 */
 		room.setCell(positionY, positionX, state);
 		repaint();
 	}
-	
+
 	public void setCell(int pixelWidth, int pixelHeight) {		
 		int positionX = getPositionX(pixelWidth);
 		int positionY = getPositionY(pixelHeight);
 		/*
 		System.out.println("x: " + positionX);
 		System.out.println("y: " + positionY);
-		*/
+		 */
 		if(room.getCell()[positionY][positionX]==Room.CLEAN)
 			room.setCell(positionY, positionX, Room.DIRTY);
 		else if(room.getCell()[positionY][positionX]==Room.DIRTY)
@@ -102,12 +115,12 @@ public class EditorPanel extends JPanel {
 			room.setCell(positionY, positionX, Room.CLEAN);
 		repaint();
 	}
-		
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		for(int i=0; i<room.getSize(); i++)
-			for(int j=0; j<room.getSize(); j++) {
+		for(int i=0; i<room.getSizeN(); i++)
+			for(int j=0; j<room.getSizeM(); j++) {
 				if(room.getCell()[i][j]==Room.DIRTY)
 					g.drawImage(this.imgDirty, j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight(), null);
 				else if(room.getCell()[i][j]==Room.WALL)
@@ -119,5 +132,5 @@ public class EditorPanel extends JPanel {
 				g.drawRect(j*this.optimalSizeCellWidth(), i*this.optimalSizeCellHeight(), this.optimalSizeCellWidth(), this.optimalSizeCellHeight());
 			}
 	}
-	
+
 }

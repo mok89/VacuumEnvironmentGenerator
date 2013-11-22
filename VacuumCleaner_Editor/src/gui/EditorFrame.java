@@ -1,13 +1,19 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -31,16 +37,20 @@ import core.Room;
 
 public class EditorFrame extends JFrame {
 
+	private static final int columSelectionPanel = 3;
+
+	private static final int rowSelectionPanel = 13;
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	protected final static int SCREEN_DEFAULT_SIZE_WIDTH = 730;
 	protected final static int SCREEN_DEFAULT_SIZE_HEIGHT = 700;	
-	
+
 	private GraphicsEnvironment ge;	
-	
+
 	private JMenuItem newProject;
 	private JMenuItem open;
 	private JMenuItem save;
@@ -48,31 +58,35 @@ public class EditorFrame extends JFrame {
 	private JMenuItem exit;
 	private JMenu file;
 	private JMenuBar bar;
-	
+
 	private MenuListener menuListener;
-	
+
 	private FrameListener frameListener;
-	
+
 	private EditorPanel editorPanel;	
-	
-	JTextField sizeTextField;
+
+	JTextField sizeTextN;
+	JTextField sizeTextM;
 	JTextField energyTextField;
 	JTextField percDirtyTextField;
 	JTextField percWallTextField;
 	JTextField percCleanTextField;
 	JTextField costMoveTextField;
 	JTextField costSuckTextField;
-	
+
 	JPanel optionPanel =new JPanel(new FlowLayout());
+	JPanel selectionPanel=new JPanel(new GridLayout(rowSelectionPanel,columSelectionPanel));
+
 	JSplitPane js=new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+	JSplitPane jsMain=new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 	private Room room;
-	
+
 	private JFileChooser chooser;
 	private String filename;
-	
+
 	private JDomWriter jDomWriter;
-	
+
 	public EditorFrame() {
 		super();
 		ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -84,67 +98,175 @@ public class EditorFrame extends JFrame {
 		editorPanel = new EditorPanel(room);
 		conteiner();
 		initOptionPanel();
+		intSelectionPanel();
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		frameListener = new FrameListener(this);
 		this.addWindowListener(frameListener);
 	}
-	
+
+	private void intSelectionPanel() {
+		addLabelVoid(4);
+		JButton cleanButton=new JButton();
+		cleanButton.setBackground(Color.white);
+		selectionPanel.add(cleanButton);
+		addLabelVoid(5);
+		JButton agentButton=new JButton(new ImageIcon("./img/agent.png"));
+		selectionPanel.add(agentButton);
+		addLabelVoid(5);
+		JButton dirtButton=new JButton(new ImageIcon("./img/polvere_625833.jpg"));
+		selectionPanel.add(dirtButton);
+		addLabelVoid(5);
+		JButton wallButton=new JButton(new ImageIcon("./img/wall.jpg"));
+		selectionPanel.add(wallButton);
+		addLabelVoid(5);
+		JButton baseButton=new JButton(new ImageIcon("./img/base.jpg"));
+		selectionPanel.add(baseButton);
+		addLabelVoid(4);
+		addLabelVoid(3);
+		addLabelVoid(3);
+		/**
+		 * listener on the button
+		 */
+		cleanButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				editorPanel.setItemSelected(Room.CLEAN);
+			}
+		});
+		agentButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				editorPanel.setItemSelected(Room.AGENT);
+			}
+		});
+		dirtButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				editorPanel.setItemSelected(Room.DIRTY);
+			}
+		});
+		wallButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				editorPanel.setItemSelected(Room.WALL);
+			}
+		});
+		baseButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				editorPanel.setItemSelected(Room.BASE);
+			}
+		});
+
+	}
+
+
+	private void addLabelVoid(int n){
+		for (int i = 0; i < n; i++) {
+			selectionPanel.add(new JLabel());
+		}
+	}
+
 	private void initOptionPanel() {
-		
+
+		JPanel sizePanel=new JPanel(new GridLayout(1, 2));
+
 		JLabel sizeLabel = new JLabel("Size");
-		optionPanel.add(sizeLabel);
-		sizeTextField = new JTextField(String.valueOf(room.getSize()));
-		sizeTextField.setColumns(4);
-		optionPanel.add(sizeTextField);
-	
+		sizePanel.add(sizeLabel);
+
+		JPanel nmPanel=new JPanel(new BorderLayout());
+		{
+			sizeTextN = new JTextField(String.valueOf(room.getSizeN()));
+			sizeTextN.setColumns(3);
+			sizeTextM = new JTextField(String.valueOf(room.getSizeM()));
+			sizeTextM.setColumns(3);
+			//		sizePanel.add(sizeTextN);
+			//		sizePanel.add(sizeTextM);
+
+			JPanel nPanel=new JPanel(new GridLayout(1,2));
+			nPanel.add(new JLabel("N"));
+			nPanel.add(sizeTextN);
+			JPanel mPanel=new JPanel(new GridLayout(1,2));
+			mPanel.add(new JLabel("M"));
+			mPanel.add(sizeTextM);
+
+			nmPanel.add(nPanel,BorderLayout.NORTH);
+			nmPanel.add(mPanel,BorderLayout.SOUTH);
+		}
+		sizePanel.add(nmPanel);
+
+		optionPanel.add(sizePanel);
+
 		JLabel energyLabel = new JLabel("Energy");
 		optionPanel.add(energyLabel);
 		energyTextField = new JTextField(String.valueOf(room.getEnergy()));
 		energyTextField.setColumns(4);
 		optionPanel.add(energyTextField);
-		
+
 		JLabel percDirtyLabel = new JLabel("% Dirty");
 		optionPanel.add(percDirtyLabel);
 		percDirtyTextField = new JTextField(String.valueOf(room.getPerc_dirty()));
 		percDirtyTextField.setColumns(4);
 		optionPanel.add(percDirtyTextField);
-		
+
 		JLabel percWallLabel = new JLabel("% Wall");
 		optionPanel.add(percWallLabel);
 		percWallTextField = new JTextField(String.valueOf(room.getPerc_wall()));
 		percWallTextField.setColumns(4);
 		optionPanel.add(percWallTextField);
-		
+
 		JLabel percCleanLabel = new JLabel("% Clean");
 		optionPanel.add(percCleanLabel);
 		percCleanTextField = new JTextField(String.valueOf(room.getPerc_clean()));
 		percCleanTextField.setColumns(4);
 		optionPanel.add(percCleanTextField);
-		
+
 		JLabel costMoveLabel = new JLabel("Cost move");
 		optionPanel.add(costMoveLabel);
 		costMoveTextField = new JTextField(String.valueOf(room.getCost_move_up()));
 		costMoveTextField.setColumns(4);
 		optionPanel.add(costMoveTextField);
-		
+
 		JLabel costSuckLabel = new JLabel("Cost suck");
 		optionPanel.add(costSuckLabel);
 		costSuckTextField = new JTextField(String.valueOf(room.getCost_suck()));
 		costSuckTextField.setColumns(4);
 		optionPanel.add(costSuckTextField);
-		
+
+		sizeTextN.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				super.keyTyped(e);
+				if(e.getKeyChar()=='\n')
+				changeMatrix(sizeTextN.getText().toString(),sizeTextM.getText().toString());
+			}
+		});
+		sizeTextM.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				super.keyTyped(e);
+				if(e.getKeyChar()=='\n')
+				changeMatrix(sizeTextN.getText().toString(),sizeTextM.getText().toString());
+			}
+		});
+
 		JButton randomize=new JButton("Randomize");
 		randomize.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				getAllItems();
-//					ArrayList<int [][]> results=room.randomizeCell();
-//					if(results!=null && results.size()>0)
-//						room.setCell(results.get(results.size()-1));
-//					else
-//						JOptionPane.showMessageDialog(editorPanel, "Uguale a zero");
+				//					ArrayList<int [][]> results=room.randomizeCell();
+				//					if(results!=null && results.size()>0)
+				//						room.setCell(results.get(results.size()-1));
+				//					else
+				//						JOptionPane.showMessageDialog(editorPanel, "Uguale a zero");
 				room.randomize();
-					editorPanel.repaint();
+				editorPanel.repaint();
 				super.mouseClicked(e);
 			}
 
@@ -156,20 +278,42 @@ public class EditorFrame extends JFrame {
 		optionPanel.add(randomize);
 	}
 
+	protected void changeMatrix(String sizN, String sizM) {
+		try{
+			Integer sizeN=Integer.valueOf(sizN);
+			Integer sizeM=Integer.valueOf(sizM);
+			if(sizeN>1 && sizeM>1){
+				int[][] cell = new int[sizeN][sizeM];
+				for(int i=0; i<sizeN; i++)
+					for(int j=0; j<sizeM; j++){
+						if(i<room.getSizeN() && j<room.getSizeM())
+							cell[i][j] = room.getAt(i, j);
+						else
+							cell[i][j] = Room.CLEAN;
+					}
+				room.setCell(cell);
+				room.setSizeN(sizeN);
+				room.setSizeM(sizeM);
+			}
+
+		}catch(Exception e){}
+		editorPanel.updateUI();
+	}
+
 	private void setCenterScreen() {
 		java.awt.Point center = ge.getCenterPoint();
-	    java.awt.Rectangle bounds = ge.getMaximumWindowBounds();
-	    int w = Math.max(bounds.width/2, Math.min(getWidth(), bounds.width));
-	    int h = Math.max(bounds.height/2, Math.min(getHeight(), bounds.height));
-	    int x = center.x - w/2, y = center.y - h/2;
-	    setBounds(x, y, w, h);
-        if (w == bounds.width && h == bounds.height)
-            setExtendedState(MAXIMIZED_BOTH);
-        validate();
+		java.awt.Rectangle bounds = ge.getMaximumWindowBounds();
+		int w = Math.max(bounds.width/2, Math.min(getWidth(), bounds.width));
+		int h = Math.max(bounds.height/2, Math.min(getHeight(), bounds.height));
+		int x = center.x - w/2, y = center.y - h/2;
+		setBounds(x, y, w, h);
+		if (w == bounds.width && h == bounds.height)
+			setExtendedState(MAXIMIZED_BOTH);
+		validate();
 	}
-	
+
 	private void setMenu() {
-		
+
 		newProject = new JMenuItem("New");
 		open = new JMenuItem("Open");
 		save = new JMenuItem("Save");
@@ -177,7 +321,7 @@ public class EditorFrame extends JFrame {
 		exit = new JMenuItem("Exit");
 		file = new JMenu("File");
 		bar = new JMenuBar();
-				
+
 		/*
 		 * BARRA MENU
 		 */
@@ -185,18 +329,18 @@ public class EditorFrame extends JFrame {
 		file.add(open);
 		file.addSeparator();
 		file.add(save);
-			save.setEnabled(false);
+		save.setEnabled(false);
 		file.add(saveAs);
-			//saveAs.setEnabled(false);
+		//saveAs.setEnabled(false);
 		file.addSeparator();
 		file.add(exit);
 		bar.add(file);
 		this.setJMenuBar(bar);
-		
+
 		abiltyMenuListener();
 
 	}
-	
+
 	public void abiltyMenuListener() {
 		/*
 		 * EVENTI
@@ -208,34 +352,39 @@ public class EditorFrame extends JFrame {
 		saveAs.addActionListener(menuListener);
 		exit.addActionListener(menuListener);
 	}
-	
+
 	private void conteiner() {
 		this.setLayout(new BorderLayout());
-		js.setDividerLocation(getWidth()-getWidth()/5);
+		js.setDividerLocation(getWidth()-getWidth()/4);
 		js.setLeftComponent(editorPanel);
 		js.setRightComponent(optionPanel);
-		this.add(js,BorderLayout.CENTER);
+
+		jsMain.setDividerLocation(getHeight()-getHeight()/10);
+		jsMain.setLeftComponent(js);
+		jsMain.setRightComponent(selectionPanel);
+		this.add(jsMain,BorderLayout.CENTER);
 	}
-	
+
 	public void newProject() {
-		room = new Room(Integer.parseInt(sizeTextField.getText()), Double.parseDouble(energyTextField.getText()), Double.parseDouble(percDirtyTextField.getText()),Double.parseDouble(percWallTextField.getText()), Double.parseDouble(percCleanTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costSuckTextField.getText()));
+		room = new Room(Integer.parseInt(sizeTextN.getText()),Integer.parseInt(sizeTextM.getText()), Double.parseDouble(energyTextField.getText()), Double.parseDouble(percDirtyTextField.getText()),Double.parseDouble(percWallTextField.getText()), Double.parseDouble(percCleanTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costMoveTextField.getText()), Double.parseDouble(costSuckTextField.getText()));
 		editorPanel.setRoom(room);
 		editorPanel.validate();
 		editorPanel.repaint();
 	}
-	
+
 	public void saveAsFile() {
 		/*
 		 * UPDATE VARIABLES CLASS ROOM
 		 */
-		sizeTextField.setText(String.valueOf(room.getSize()));
+		sizeTextN.setText(String.valueOf(room.getSizeN()));
+		sizeTextM.setText(String.valueOf(room.getSizeM()));
 		room.setEnergy(Double.parseDouble(energyTextField.getText()));
 		room.setCost_move_up(Double.parseDouble(costMoveTextField.getText()));
 		room.setCost_move_down(Double.parseDouble(costMoveTextField.getText()));
 		room.setCost_move_left(Double.parseDouble(costMoveTextField.getText()));
 		room.setCost_move_right(Double.parseDouble(costMoveTextField.getText()));
 		room.setCost_suck(Double.parseDouble(costSuckTextField.getText()));
-		
+
 		chooser = new JFileChooser();
 		final ExtensionFileFilter filter = new ExtensionFileFilter();
 		filter.addExtension("xml");
@@ -249,8 +398,8 @@ public class EditorFrame extends JFrame {
 			jDomWriter.createXML(filename);
 		}
 	}
-	
-	
+
+
 	public static void main(String[] args) {
 		EditorFrame ef = new EditorFrame();
 		ef.setVisible(true);

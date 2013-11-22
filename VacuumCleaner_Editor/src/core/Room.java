@@ -1,7 +1,6 @@
 package core;
 
 import java.awt.Point;
-import java.util.ArrayList;
 
 /**
  * 
@@ -21,32 +20,35 @@ public class Room {
 	public static final double DEFAULT_COST_MOVE_LEFT = 1;
 	public static final double DEFAULT_COST_MOVE_RIGHT = 1;
 	public static final double DEFAULT_COST_SUCK = 2;
-	
+
 	public static final int CLEAN = 0;
 	public static final int DIRTY = 1;
 	public static final int WALL = 2;
 	public static final int BASE = -1;
 	public static final int AGENT = -2;
-	
+
 	private int[][] cell;
 	public void setCell(int[][] cell) {
 		this.cell = cell;
 	}
 
-	private int size;
+//	private int size;
+	private int sizeM;
+	private int sizeN;
 	private double energy;
 	private double perc_dirty;
 	private double perc_wall;
-	
+
 	private double perc_clean;
 	private double cost_move_up;
 	private double cost_move_down;
 	private double cost_move_left;
 	private double cost_move_right;
 	private double cost_suck;
-	
+
 	public Room() {
-		this.size=DEFAULT_SIZE;
+		this.sizeM=DEFAULT_SIZE;
+		this.sizeN=DEFAULT_SIZE;
 		this.energy=DEFAULT_ENERGY;
 		this.perc_dirty=DEFAULT_PERC_DIRTY;
 		this.perc_wall=DEFAULT_PERC_WALL;
@@ -56,14 +58,15 @@ public class Room {
 		this.cost_move_left=DEFAULT_COST_MOVE_LEFT;
 		this.cost_move_right=DEFAULT_COST_MOVE_RIGHT;
 		this.cost_suck=DEFAULT_COST_SUCK;
-		cell = new int[size][size];
-		for(int i=0; i<size; i++)
-			for(int j=0; j<size; j++)
+		cell = new int[sizeN][sizeM];
+		for(int i=0; i<sizeN; i++)
+			for(int j=0; j<sizeM; j++)
 				cell[i][j] = CLEAN;
 	}
-	
-	public Room(int size, double energy, double perc_dirty,double perc_wall, double perc_clean, double cost_move_up, double cost_move_down, double cost_move_left, double cost_move_right, double cost_suck) {
-		this.size=size;
+
+	public Room(int sizeN,int sizeM, double energy, double perc_dirty,double perc_wall, double perc_clean, double cost_move_up, double cost_move_down, double cost_move_left, double cost_move_right, double cost_suck) {
+		this.sizeN=sizeN;
+		this.sizeM=sizeM;
 		this.energy=energy;
 		this.perc_dirty=perc_dirty;
 		this.perc_wall=perc_wall;
@@ -73,9 +76,9 @@ public class Room {
 		this.cost_move_left=cost_move_left;
 		this.cost_move_right=cost_move_right;
 		this.cost_suck=cost_suck;
-		cell = new int[size][size];
-		for(int i=0; i<size; i++)
-			for(int j=0; j<size; j++)
+		cell = new int[sizeN][sizeM];
+		for(int i=0; i<sizeN; i++)
+			for(int j=0; j<sizeM; j++)
 				cell[i][j] = CLEAN;
 	}
 
@@ -84,21 +87,31 @@ public class Room {
 	}
 
 	public void setCell(int i, int j, int state) {
-		if(state==Room.BASE) {
-			if(thereIsOneBase())
+		try{
+			if(state==Room.BASE) {
+				if(thereIsOneBase())
+					cell[i][j]=state;
+			}
+			else {
 				cell[i][j]=state;
-		}
-		else {
-			cell[i][j]=state;
-		}
-	}
-		
-	public int getSize() {
-		return size;
+			}
+		}catch(Exception e){}
 	}
 
-	public void setSize(int size) {
-		this.size = size;
+	public int getSizeM() {
+		return sizeM;
+	}
+
+	public void setSizeM(int sizeM) {
+		this.sizeM = sizeM;
+	}
+
+	public int getSizeN() {
+		return sizeN;
+	}
+
+	public void setSizeN(int sizeN) {
+		this.sizeN = sizeN;
 	}
 
 	public double getEnergy() {
@@ -116,7 +129,7 @@ public class Room {
 	public void setPerc_dirty(double perc_dirty) {
 		this.perc_dirty = perc_dirty;
 	}
-	
+
 	public double getPerc_wall() {
 		return perc_wall;
 	}
@@ -179,30 +192,23 @@ public class Room {
 		 * Only one base
 		 * if the base it is present return false, true otherwise
 		 */
-		for(int i=0; i<size; i++)
-			for(int j=0; j<size; j++)
+		for(int i=0; i<sizeN; i++)
+			for(int j=0; j<sizeM; j++)
 				if(cell[i][j]==Room.BASE)
 					return false;
 		return true;
 	}
 
-	@Deprecated
-	public ArrayList<int [][]> randomizeCell() {
-		Randomize r=new Randomize(size, (int)getPerc_dirty(), (int)getPerc_wall(), 3, getPointAgent(), getPointBase());
-		return r.randomize();
-//		return r.randomize();
-		
-	}
 	public void randomize() {
-		Randomize r=new Randomize(size, (int)getPerc_dirty(), (int)getPerc_wall(), 3, getPointAgent(), getPointBase());
-		r.randomize(cell,size);
-//		return r.randomize();
-		
+		Randomize r=new Randomize(sizeN,sizeM, (int)getPerc_dirty(), (int)getPerc_wall(), 3, getPointAgent(), getPointBase());
+		r.randomize(cell,sizeN,sizeM);
+		//		return r.randomize();
+
 	}
 
 	public boolean isAgent() {
-		for(int i=0;i<size;i++){
-			for(int j=0;j<size;j++){
+		for(int i=0;i<sizeN;i++){
+			for(int j=0;j<sizeM;j++){
 				if(cell[i][j]==Room.AGENT){
 					return true;
 				}
@@ -212,8 +218,8 @@ public class Room {
 	}
 
 	public boolean isBase() {
-		for(int i=0;i<size;i++){
-			for(int j=0;j<size;j++){
+		for(int i=0;i<sizeN;i++){
+			for(int j=0;j<sizeM;j++){
 				if(cell[i][j]==Room.BASE){
 					return true;
 				}
@@ -221,10 +227,10 @@ public class Room {
 		}
 		return false;
 	}
-	
+
 	public Point getPointAgent() {
-		for(int i=0;i<size;i++){
-			for(int j=0;j<size;j++){
+		for(int i=0;i<sizeN;i++){
+			for(int j=0;j<sizeM;j++){
 				if(cell[i][j]==Room.AGENT){
 					return new Point(i,j);
 				}
@@ -234,8 +240,8 @@ public class Room {
 	}
 
 	public Point getPointBase() {
-		for(int i=0;i<size;i++){
-			for(int j=0;j<size;j++){
+		for(int i=0;i<sizeN;i++){
+			for(int j=0;j<sizeM;j++){
 				if(cell[i][j]==Room.BASE){
 					return new Point(i,j);
 				}
@@ -243,5 +249,9 @@ public class Room {
 		}
 		return null;
 	}
-		
+
+	public int getAt(int x,int y){
+		return cell[x][y];
+	}
+	
 }
