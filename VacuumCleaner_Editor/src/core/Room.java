@@ -79,8 +79,10 @@ public class Room {
 		this.cost_suck=cost_suck;
 		cell = new Tile[sizeN][sizeM];
 		for(int i=0; i<sizeN; i++)
-			for(int j=0; j<sizeM; j++)
+			for(int j=0; j<sizeM; j++) {
+				cell[i][j]=new Tile(CLEAN, 1);
 				cell[i][j].setState(CLEAN);
+			}
 	}
 
 	public Tile[][] getCell() {

@@ -50,23 +50,29 @@ public class JDomWriter {
 		Document document = new Document(vacuum_istance);
 		
 		Element board = new Element("board");
-		Element size = new Element("size");
-		size.setText(String.valueOf(room.getSize()));
-		board.addContent(size);
+		Element sizeN = new Element("size_n");
+		sizeN.setText(String.valueOf(room.getSizeN()));
+		board.addContent(sizeN);
+		Element sizeM = new Element("size_m");
+		sizeM.setText(String.valueOf(room.getSizeM()));
+		board.addContent(sizeM);		
+		
 		Element tile_state;
 		
 		int base_x=-1, base_y=-1;
 		int agent_x=-1, agent_y=-1;
 		
-		for(int i=0; i<room.getSize(); i++)
-			for(int j=0; j<room.getSize(); j++)
-				if(room.getCell()[i][j]!=Room.CLEAN && room.getCell()[i][j]!=Room.BASE && room.getCell()[i][j]!=Room.AGENT) { 
+		for(int i=0; i<room.getSizeN(); i++)
+			for(int j=0; j<room.getSizeM(); j++)
+				if(room.getCell()[i][j].getState()!=Room.CLEAN && room.getCell()[i][j].getState()!=Room.BASE && room.getCell()[i][j].getState()!=Room.AGENT) { 
 					tile_state = new Element("tile_state");
 					tile_state.setAttribute("x", String.valueOf(i));
 					tile_state.setAttribute("y", String.valueOf(j));
-					if(room.getCell()[i][j]==Room.DIRTY)
+					if(room.getCell()[i][j].getState()==Room.DIRTY) {
+						tile_state.setAttribute("value", String.valueOf(room.getCell()[i][j].getValue()));
 						tile_state.setText("dirty");
-					else if(room.getCell()[i][j]==Room.WALL)
+					}
+					else if(room.getCell()[i][j].getState()==Room.WALL)
 						tile_state.setText("obstacle");
 					/*
 					else if(room.getCell()[i][j]==Room.CLEAN)
@@ -74,11 +80,11 @@ public class JDomWriter {
 					*/
 					board.addContent(tile_state);
 				}
-				else if(room.getCell()[i][j]==Room.BASE) {
+				else if(room.getCell()[i][j].getState()==Room.BASE) {
 					base_x=i;
 					base_y=j;
 				}
-				else if(room.getCell()[i][j]==Room.AGENT) {
+				else if(room.getCell()[i][j].getState()==Room.AGENT) {
 					agent_x=i;
 					agent_y=j;
 				}
