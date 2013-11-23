@@ -1,5 +1,8 @@
 package gui;
 
+import java.io.File;
+
+import gui.VacuumFrame;
 import instanceXMLParser.Instance;
 import agent.VacuumAgent1;
 import aima.core.agent.impl.AbstractAgent;
@@ -41,7 +44,7 @@ public class VacuumController extends AgentAppController {
 	public void prepare(final String changedSelector) {
 		final AgentAppFrame.SelectionState selState = this.frame.getSelection();
 		final Instance i = new Instance();
-		i.buildINstanceJDom("instance_EXAMPLE.xml");
+//		i.buildINstanceJDom("instance_EXAMPLE.xml");
 		this.env = null;
 		this.agent = null;
 		switch (selState.getValue(VacuumFrame.AGENT_SEL)) {
@@ -51,8 +54,36 @@ public class VacuumController extends AgentAppController {
 		}
 		switch (selState.getValue(VacuumFrame.ENV_SEL)) {
 		default:
+
+			final int selectedValue = selState.getValue(VacuumFrame.ENV_SEL);
+
+			// System.out.println("selectedValue: " + selectedValue);
+
+			String fileName = "";
+			int current = 0;
+
+			final String path = "environment";
+			final File folder = new File(path);
+			final File[] listOfFiles = folder.listFiles();
+
+			for (final File listOfFile : listOfFiles) {
+				if (listOfFile.isFile()) {
+					final String file = listOfFile.getName();
+					if (file.endsWith(".xml") || file.endsWith(".XML")) {
+						current++;
+						fileName = file;
+					}
+				}
+				if (current > selectedValue)
+					break;
+			}
+
+			System.out.println("Loaded: " + "environment/" + fileName);
+
+			i.buildINstanceJDom("environment/" + fileName);
+
 			this.env = new VacuumEnvironment(i, this.agent);
-			break;
+
 		}
 		if (this.env != null && this.agent != null) {
 			this.frame.getEnvView().setEnvironment(this.env);
