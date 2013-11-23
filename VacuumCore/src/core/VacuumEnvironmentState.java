@@ -29,8 +29,10 @@ public class VacuumEnvironmentState implements EnvironmentState,
 	private final Map<Agent, Double> currentEnergy;
 	private final Map<Action, Double> actionEnergyCosts;
 	private int N;
+	private int M;
 	private int dirtyInitialTiles;
 	private int cleanedTiles;
+	private boolean movedLastTime;
 
 	/**
 	 * Constructor
@@ -50,6 +52,8 @@ public class VacuumEnvironmentState implements EnvironmentState,
 				this.dirtyInitialTiles++;
 
 		this.cleanedTiles = 0;
+
+		this.movedLastTime = false;
 
 	}
 
@@ -139,6 +143,15 @@ public class VacuumEnvironmentState implements EnvironmentState,
 		return this.state.get(location);
 	}
 
+	public int getM() {
+		return this.M;
+	}
+
+	public double getMaxDistanceToTheBase() {
+		// FIXME return maximum of the distances from each tile to the base
+		return this.N * this.M;
+	}
+
 	public int getN() {
 		return this.N;
 	}
@@ -165,8 +178,13 @@ public class VacuumEnvironmentState implements EnvironmentState,
 		return hash;
 	}
 
+	public boolean isMovedLastTime() {
+		return this.movedLastTime;
+	}
+
 	private void loadFromBean(final Instance instanceBean, final Agent a) {
 		this.N = instanceBean.getSize();
+		this.M = instanceBean.getSize();
 		for (int i = 0; i < this.N; i++)
 			for (int j = 0; j < this.N; j++)
 				this.state.put(new Point(i, j),
@@ -200,8 +218,11 @@ public class VacuumEnvironmentState implements EnvironmentState,
 			if (current_location.x < this.N - 1)
 				new_location.x++;
 
-		if (this.state.get(new_location) != LocationState.Obstacle)
+		if (this.state.get(new_location) != LocationState.Obstacle) {
 			this.agentLocations.put(agent, new_location);
+			this.movedLastTime = true;
+		} else
+			this.movedLastTime = false;
 
 	}
 
