@@ -52,9 +52,7 @@ public class VacuumEnvironment extends AbstractEnvironment {
 		if (this.envState.getActionFromName("suck").equals(agentAction)) {
 			if (LocationState.Dirty.equals(this.envState
 					.getLocationState(this.envState.getAgentLocation(agent)))) {
-				this.envState.setLocationState(
-						this.envState.getAgentLocation(agent),
-						LocationState.Clean);
+				this.envState.suckTile(this.envState.getAgentLocation(agent));
 				this.envState.updateCurrentEnergy(agent,
 						this.envState.getEnergyCost(agentAction));
 				this.updatePerformanceMeasure(agent);
@@ -91,7 +89,7 @@ public class VacuumEnvironment extends AbstractEnvironment {
 	public Percept getPerceptSeenBy(final Agent anAgent) {
 
 		return new LocalVacuumEnvironmentPerceptTaskEnvironmentB(
-				this.envState.getLocationState(this.envState
+				this.envState.getCellLogicalState(this.envState
 						.getAgentLocation(anAgent)),
 				this.envState.getInitialEnergy(),
 				this.envState.getCurrentEnergy(anAgent),

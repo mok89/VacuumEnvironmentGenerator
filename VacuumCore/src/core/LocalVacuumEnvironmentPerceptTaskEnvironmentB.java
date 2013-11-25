@@ -1,11 +1,12 @@
 package core;
 
+import instanceXMLParser.CellLogicalState;
+
 import java.util.Map;
 
 import aima.core.agent.Action;
 import aima.core.agent.Agent;
 import aima.core.agent.impl.DynamicPercept;
-import core.VacuumEnvironment.LocationState;
 
 /**
  * Represents a local percept in the vacuum environment (i.e. details the
@@ -34,14 +35,14 @@ public class LocalVacuumEnvironmentPerceptTaskEnvironmentB extends
 	 */
 
 	public LocalVacuumEnvironmentPerceptTaskEnvironmentB(
-			final VacuumEnvironment.LocationState state,
+			final CellLogicalState cellLogicalState,
 			final double initialEnergy, final Double currentEnergy,
 			final Map<Action, Double> actionEnergyCosts, final int N,
 			final int M, final boolean movedLastTime) {
 
 		this.setAttribute(
 				LocalVacuumEnvironmentPerceptTaskEnvironmentB.ATTRIBUTE_STATE,
-				state);
+				cellLogicalState);
 		this.setAttribute(
 				LocalVacuumEnvironmentPerceptTaskEnvironmentB.ATTRIBUTE_INITIAL_ENERGY,
 				initialEnergy);
@@ -86,8 +87,8 @@ public class LocalVacuumEnvironmentPerceptTaskEnvironmentB extends
 				.getAttribute(LocalVacuumEnvironmentPerceptTaskEnvironmentB.ATTRIBUTE_N);
 	}
 
-	public VacuumEnvironment.LocationState getState() {
-		return (LocationState) this
+	public CellLogicalState getState() {
+		return (CellLogicalState) this
 				.getAttribute(LocalVacuumEnvironmentPerceptTaskEnvironmentB.ATTRIBUTE_STATE);
 	}
 
