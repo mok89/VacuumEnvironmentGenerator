@@ -94,7 +94,9 @@ public class VacuumEnvironment extends AbstractEnvironment {
 				this.envState.getInitialEnergy(),
 				this.envState.getCurrentEnergy(anAgent),
 				this.envState.getActionEnergyCosts(), this.envState.getN(),
-				this.envState.getM(), this.envState.isMovedLastTime());
+				this.envState.getM(), this.envState.isMovedLastTime(),
+				this.envState.getBaseLocation().equals(
+						this.envState.getAgentLocation(anAgent)));
 
 	}
 

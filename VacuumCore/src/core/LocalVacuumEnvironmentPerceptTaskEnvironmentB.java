@@ -27,6 +27,7 @@ public class LocalVacuumEnvironmentPerceptTaskEnvironmentB extends
 	public static final String ATTRIBUTE_N = "N";
 	public static final String ATTRIBUTE_M = "M";
 	public static final String ATTRIBUTE_MOVED_LAST_TIME = "movedLastTime";
+	public static final String ATTRIBUTE_ON_BASE = "onBase";
 
 	/**
 	 * Construct a vacuum environment percept from the agent's perception of the
@@ -38,7 +39,7 @@ public class LocalVacuumEnvironmentPerceptTaskEnvironmentB extends
 			final CellLogicalState cellLogicalState,
 			final double initialEnergy, final Double currentEnergy,
 			final Map<Action, Double> actionEnergyCosts, final int N,
-			final int M, final boolean movedLastTime) {
+			final int M, final boolean movedLastTime, final boolean onBase) {
 
 		this.setAttribute(
 				LocalVacuumEnvironmentPerceptTaskEnvironmentB.ATTRIBUTE_STATE,
@@ -59,6 +60,9 @@ public class LocalVacuumEnvironmentPerceptTaskEnvironmentB extends
 		this.setAttribute(
 				LocalVacuumEnvironmentPerceptTaskEnvironmentB.ATTRIBUTE_MOVED_LAST_TIME,
 				movedLastTime);
+		this.setAttribute(
+				LocalVacuumEnvironmentPerceptTaskEnvironmentB.ATTRIBUTE_ON_BASE,
+				onBase);
 
 	}
 
@@ -95,6 +99,11 @@ public class LocalVacuumEnvironmentPerceptTaskEnvironmentB extends
 	public boolean isMovedLastTime() {
 		return (boolean) this
 				.getAttribute(LocalVacuumEnvironmentPerceptTaskEnvironmentB.ATTRIBUTE_MOVED_LAST_TIME);
+	}
+
+	public boolean isOnBase() {
+		return (boolean) this
+				.getAttribute(LocalVacuumEnvironmentPerceptTaskEnvironmentB.ATTRIBUTE_ON_BASE);
 	}
 
 	/**

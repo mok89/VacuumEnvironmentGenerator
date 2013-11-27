@@ -78,9 +78,10 @@ public class VacuumController extends AgentAppController {
 					break;
 			}
 
-			System.out.println("Loaded: " + "environment/" + fileName);
+			System.out.println("Loaded: " + "environment" + File.separator
+					+ fileName);
 
-			i.buildINstanceJDom("environment/" + fileName);
+			i.buildINstanceJDom("environment" + File.separator + fileName);
 
 			this.env = new VacuumEnvironment(i, this.agent);
 
