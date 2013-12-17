@@ -1,29 +1,25 @@
 package executer;
 
+import instanceXMLParser.Instance;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.ObjectInputStream.GetField;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import aima.core.agent.impl.AbstractAgent;
-import aima.core.environment.vacuum.VacuumEnvironmentState;
-import instanceXMLParser.Instance;
 import core.VacuumEnvironment;
+import core.VacuumEnvironmentState;
 
 public class Executer {
 
 	public static boolean executionEnded;
+	public static boolean executionException;
 
 	public static long timeInterval;
 
@@ -54,15 +50,13 @@ public class Executer {
 		String[] jars = dir.list();
 
 		try {
-			PrintWriter writer = new PrintWriter(
-					"PerformanceMeasures/performanceMeasures.csv");
+			PrintWriter writer = new PrintWriter("PerformanceMeasures/performanceMeasures.csv");
 
 			writer.println(";Cleaned tiles;Current energy;Dirty initial tiles;Initial energy;Performance measure");
-			
+
 			for (String jar : jars) {
 				try {
-					URL jarURL = new URL("jar", "", "file:"
-							+ dir.getAbsolutePath() + "/" + jar + "!/");
+					URL jarURL = new URL("jar", "", "file:" + dir.getAbsolutePath() + "/" + jar + "!/");
 
 					URLClassLoader cl = new URLClassLoader(new URL[] { jarURL });
 					Class Agent = cl.loadClass("agent.VacuumAgent1");
@@ -85,6 +79,7 @@ public class Executer {
 						long time = System.currentTimeMillis();
 
 						executionEnded = false;
+						executionException = false;
 
 						boolean theAgentTakeTooTime = false;
 
@@ -92,28 +87,24 @@ public class Executer {
 
 						exec.start();
 
-						while (!executionEnded) {
+						while (!executionEnded && !executionException) {
 							if (System.currentTimeMillis() - time >= timeInterval) {
 								exec.stop();
 								executionEnded = true;
 								theAgentTakeTooTime = true;
-								System.out.println("The agent take too time");
 							}
 						}
 
 						if (theAgentTakeTooTime) {
-							writer.println(xml + ";"
-									+ "Execution take too time" + ";");
+							writer.println(xml + ";" + "Execution take too time" + ";");
+							System.out.println("The agent take too time");
+						} else if (executionException) {
+							writer.println(xml + ";" + "The agent program has thrown an exception :(" + ";");
+							System.out.println("The agent program has thrown an exception :(");
 						} else {
 
-							core.VacuumEnvironmentState state = enviroment
-									.getEnvState();
-							String result = state.getCleanedTiles(agent) + ";"
-									+ state.getCurrentEnergy(agent) + ";"
-									+ state.getDirtyInitialTiles() + ";"
-									+ state.getInitialEnergy() + ";"
-									+ enviroment.getPerformanceMeasure(agent)
-									+ ";";
+							core.VacuumEnvironmentState state = (VacuumEnvironmentState) enviroment.getCurrentState();
+							String result = state.getCleanedTiles(agent) + ";" + state.getCurrentEnergy(agent) + ";" + state.getDirtyInitialTiles() + ";" + state.getInitialEnergy() + ";" + enviroment.getPerformanceMeasure(agent) + ";";
 							writer.println(xml + ";" + result);
 						}
 					}
