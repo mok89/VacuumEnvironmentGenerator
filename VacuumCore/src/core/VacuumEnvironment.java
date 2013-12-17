@@ -127,6 +127,7 @@ public class VacuumEnvironment extends AbstractEnvironment {
 		final double D0 = this.envState.getDirtyInitialTiles();
 		final double maxDb = this.envState.getMaxDistanceToTheBase();
 
+		// Task Environment B
 		final Double performanceMeasure = Math.pow((CT + 1) / (D0 + 1), 2)
 				+ Math.pow((maxDb - BdT) / maxDb, 4);
 
