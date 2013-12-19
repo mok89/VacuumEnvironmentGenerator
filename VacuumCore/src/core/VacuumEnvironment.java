@@ -118,7 +118,7 @@ public class VacuumEnvironment extends AbstractEnvironment {
 		if (avgSqrDist == 0 || maxD == 0)
 			avgSqrDistNorm = 0;
 		else
-			avgSqrDistNorm = avgSqrDist / maxD;
+			avgSqrDistNorm = avgSqrDist/maxD;
 
 		// Task Environment C
 		final Double performanceMeasure = (Math.pow((CT + 1) / (D0 + 1), 4) + Math.pow(avgSqrDistNorm, 2)) * Math.ceil((ET - BdT + 1) / (E0 + 1));
