@@ -120,19 +120,16 @@ public class VacuumEnvironment extends AbstractEnvironment {
 
 	protected void updatePerformanceMeasure(final Agent agent) {
 
-		final double ET = this.envState.getCurrentEnergy(agent);
+		// final double ET = this.envState.getCurrentEnergy(agent);
 		final double BdT = this.envState.getDistanceFromBase(agent);
-		final double E0 = this.envState.getInitialEnergy();
+		// final double E0 = this.envState.getInitialEnergy();
 		final double CT = this.envState.getCleanedTiles(agent);
 		final double D0 = this.envState.getDirtyInitialTiles();
-		// final double maxDb = this.envState.getMaxDistanceToTheBase();
-		final double avgSqrDist = this.envState.getAverageSquareDistance();
-		final double maxD = this.envState.getMaxDistanceBetweenTwoCells();
+		final double maxDb = this.envState.getMaxDistanceToTheBase();
 
-		// Task Environment C
-		final Double performanceMeasure = Math.pow((CT + 1) / (D0 + 1), 4)
-				+ Math.pow(avgSqrDist / maxD, 2)
-				* Math.ceil((ET - BdT + 1) / (E0 + 1));
+		// Task Environment B
+		final Double performanceMeasure = Math.pow((CT + 1) / (D0 + 1), 2)
+				+ Math.pow((maxDb - BdT) / maxDb, 4);
 
 		this.performanceMeasures.put(agent, performanceMeasure);
 
