@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import aima.core.agent.State;
 import aima.core.agent.impl.AbstractAgent;
 import core.VacuumEnvironment;
 import core.VacuumEnvironmentState;
@@ -64,7 +65,7 @@ public class Executer {
 		try {
 			PrintWriter writer = new PrintWriter("PerformanceMeasures/performanceMeasures.csv");
 
-			writer.println(";Cleaned tiles;Current energy;Dirty initial tiles;Initial energy;Distance from base;Max distance from base;Performance measure");
+			writer.println(";Cleaned tiles;Current energy;Dirty initial tiles;Initial energy;Distance from base;Max distance from base;Performance measure;Errors");
 
 			for (String jar : jars) {
 				try {
@@ -105,22 +106,27 @@ public class Executer {
 								getExecutionEnded(true, true);
 								theAgentTakeTooTime = true;
 							}
-							Thread.sleep(1000);
 						}
+
+						enviroment.updatePerformanceMeasure(agent);
+						core.VacuumEnvironmentState state = (VacuumEnvironmentState) enviroment.getCurrentState();
+						String result = state.getCleanedTiles(agent) + ";" + state.getCurrentEnergy(agent) + ";" + state.getDirtyInitialTiles() + ";" + state.getInitialEnergy() + ";" + state.getDistanceFromBase(agent) + ";"
+								+ state.getMaxDistanceToTheBase() + ";" + enviroment.getPerformanceMeasure(agent) + ";";
 
 						if (theAgentTakeTooTime) {
-							writer.println(xml + ";" + "Execution takes too time" + ";");
-							System.out.println("The agent takes too time");
-						} else if (getExecutionException(false, true)) {
-							writer.println(xml + ";" + "The agent program has thrown an exception :(" + ";");
-							System.out.println("The agent program has thrown an exception :(");
-						} else {
-
-							core.VacuumEnvironmentState state = (VacuumEnvironmentState) enviroment.getCurrentState();
-							String result = state.getCleanedTiles(agent) + ";" + state.getCurrentEnergy(agent) + ";" + state.getDirtyInitialTiles() + ";" + state.getInitialEnergy()  + ";"
-									+ state.getDistanceFromBase(agent) + ";" + state.getMaxDistanceToTheBase() + ";" + enviroment.getPerformanceMeasure(agent)+ ";";
-							writer.println(xml + ";" + result);
+							result += "Execution takes too time" + ";";
+							System.out.println("Execution takes too time");
 						}
+						if (getExecutionException(false, true)) {
+							result += "The agent program has thrown an exception :(" + ";";
+							System.out.println("The agent program has thrown an exception :(");
+						}
+						if(enviroment.isEnergyLessThenZero()){
+							result += "The agent tried to use more energy than it has" + ";";
+							System.out.println("The agent tried to use more energy than it has");
+						}
+
+						writer.println(xml + ";" + result);
 					}
 
 					writer.println();
@@ -142,9 +148,6 @@ public class Executer {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

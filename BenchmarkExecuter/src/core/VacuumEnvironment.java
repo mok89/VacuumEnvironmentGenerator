@@ -32,6 +32,7 @@ public class VacuumEnvironment extends AbstractEnvironment {
 
 	protected VacuumEnvironmentState envState = null;
 	protected boolean isDone = false;
+	private boolean energyLessThenZero = false;
 
 	/**
 	 * Constructs a vacuum environment with two locations, in which dirt is
@@ -55,12 +56,13 @@ public class VacuumEnvironment extends AbstractEnvironment {
 						.getEnergyCost(agentAction)) {
 
 			this.isDone = true;
-			System.out
-					.println("******************************************************************************");
-			System.out
-					.println("* Agent killed by the system because it tried to use more energy than it has *");
-			System.out
-					.println("******************************************************************************");
+			this.energyLessThenZero = true;
+//			System.out
+//					.println("******************************************************************************");
+//			System.out
+//					.println("* Agent killed by the system because it tried to use more energy than it has *");
+//			System.out
+//					.println("******************************************************************************");
 
 		} else if (this.envState.getActionFromName("suck").equals(agentAction)) {
 			if (LocationState.Dirty.equals(this.envState
@@ -68,7 +70,7 @@ public class VacuumEnvironment extends AbstractEnvironment {
 				this.envState.suckTile(this.envState.getAgentLocation(agent));
 				this.envState.updateCurrentEnergy(agent,
 						this.envState.getEnergyCost(agentAction));
-				this.updatePerformanceMeasure(agent);
+//				this.updatePerformanceMeasure(agent);
 			}
 		} else if (agentAction.isNoOp())
 			// In the Vacuum Environment we consider things done if
@@ -78,7 +80,7 @@ public class VacuumEnvironment extends AbstractEnvironment {
 			this.envState.moveAgent(agent, agentAction);
 			this.envState.updateCurrentEnergy(agent,
 					this.envState.getEnergyCost(agentAction));
-			this.updatePerformanceMeasure(agent);
+//			this.updatePerformanceMeasure(agent);
 		}
 
 		return this.envState;
@@ -118,7 +120,7 @@ public class VacuumEnvironment extends AbstractEnvironment {
 		return super.isDone() || this.isDone;
 	}
 
-	protected void updatePerformanceMeasure(final Agent agent) {
+	public void updatePerformanceMeasure(final Agent agent) {
 
 		// final double ET = this.envState.getCurrentEnergy(agent);
 		final double BdT = this.envState.getDistanceFromBase(agent);
@@ -133,5 +135,13 @@ public class VacuumEnvironment extends AbstractEnvironment {
 
 		this.performanceMeasures.put(agent, performanceMeasure);
 
+	}
+
+	public boolean isEnergyLessThenZero() {
+		return energyLessThenZero;
+	}
+
+	public void setEnergyLessThenZero(boolean energyLessThenZero) {
+		this.energyLessThenZero = energyLessThenZero;
 	}
 }
