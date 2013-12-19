@@ -33,7 +33,7 @@ public class VacuumEnvironment extends AbstractEnvironment {
 	protected VacuumEnvironmentState envState = null;
 	protected boolean isDone = false;
 	private boolean energyLessThenZero = false;
-	
+
 	/**
 	 * Constructs a vacuum environment with two locations, in which dirt is
 	 * placed at random.
@@ -54,22 +54,24 @@ public class VacuumEnvironment extends AbstractEnvironment {
 
 			this.energyLessThenZero = true;
 			this.isDone = true;
-//			System.out.println("******************************************************************************");
-//			System.out.println("* Agent killed by the system because it tried to use more energy than it has *");
-//			System.out.println("******************************************************************************");
-//
-//			this.updatePerformanceMeasure(agent);
+			// System.out.println("******************************************************************************");
+			// System.out.println("* Agent killed by the system because it tried to use more energy than it has *");
+			// System.out.println("******************************************************************************");
+			//
+			// this.updatePerformanceMeasure(agent);
 
 		} else if (this.envState.getActionFromName("suck").equals(agentAction)) {
-//			if (LocationState.Dirty.equals(this.envState.getLocationState(this.envState.getAgentLocation(agent)))) {
-				this.envState.suckTile(this.envState.getAgentLocation(agent));
-				this.envState.updateCurrentEnergy(agent, this.envState.getEnergyCost(agentAction));
-//			}
+			// if
+			// (LocationState.Dirty.equals(this.envState.getLocationState(this.envState.getAgentLocation(agent))))
+			// {
+			this.envState.suckTile(this.envState.getAgentLocation(agent));
+			this.envState.updateCurrentEnergy(agent, this.envState.getEnergyCost(agentAction));
+			// }
 		} else if (agentAction.isNoOp()) {
 			// In the Vacuum Environment we consider things done if
 			// the agent generates a NoOp.
 			this.isDone = true;
-//			this.updatePerformanceMeasure(agent);
+			// this.updatePerformanceMeasure(agent);
 		} else {
 			this.envState.moveAgent(agent, agentAction);
 			this.envState.updateCurrentEnergy(agent, this.envState.getEnergyCost(agentAction));
@@ -106,26 +108,25 @@ public class VacuumEnvironment extends AbstractEnvironment {
 	}
 
 	public void updatePerformanceMeasure(final Agent agent) {
+
 		final double ET = this.envState.getCurrentEnergy(agent);
 		final double BdT = this.envState.getDistanceFromBase(agent);
 		final double E0 = this.envState.getInitialEnergy();
 		final double CT = this.envState.getCleanedTiles(agent);
 		final double D0 = this.envState.getDirtyInitialTiles();
-		// final double maxDb = this.envState.getMaxDistanceToTheBase();
 		this.envState.computeAverageSquareDistance();
 		final double avgSqrDist = this.envState.getAvarage();
 		final double maxD = this.envState.getMaxDirtyDistance();
 		final double avgSqrDistNorm;
 		if (avgSqrDist == 0 || maxD == 0)
-			avgSqrDistNorm = 0;
+			avgSqrDistNorm = 1;
 		else
-			avgSqrDistNorm = avgSqrDist/maxD;
+			avgSqrDistNorm = avgSqrDist / maxD;
 
 		// Task Environment C
 		final Double performanceMeasure = (Math.pow((CT + 1) / (D0 + 1), 4) + Math.pow(avgSqrDistNorm, 2)) * Math.ceil((ET - BdT + 1) / (E0 + 1));
 
 		this.performanceMeasures.put(agent, performanceMeasure);
-
 
 	}
 
