@@ -61,10 +61,10 @@ public class VacuumEnvironment extends AbstractEnvironment {
 //			this.updatePerformanceMeasure(agent);
 
 		} else if (this.envState.getActionFromName("suck").equals(agentAction)) {
-			if (LocationState.Dirty.equals(this.envState.getLocationState(this.envState.getAgentLocation(agent)))) {
+//			if (LocationState.Dirty.equals(this.envState.getLocationState(this.envState.getAgentLocation(agent)))) {
 				this.envState.suckTile(this.envState.getAgentLocation(agent));
 				this.envState.updateCurrentEnergy(agent, this.envState.getEnergyCost(agentAction));
-			}
+//			}
 		} else if (agentAction.isNoOp()) {
 			// In the Vacuum Environment we consider things done if
 			// the agent generates a NoOp.
