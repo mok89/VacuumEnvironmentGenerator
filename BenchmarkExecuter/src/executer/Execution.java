@@ -14,9 +14,9 @@ public class Execution extends Thread {
 	public void run() {
 		try {
 			env.stepUntilDone();
-			Executer.executionEnded = true;
+			Executer.getExecutionEnded(true, true);
 		} catch (Exception e) {
-			Executer.executionException = true;
+			Executer.getExecutionException(true, true);
 		}
 	}
 }

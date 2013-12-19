@@ -23,6 +23,18 @@ public class Executer {
 
 	public static long timeInterval;
 
+	public static synchronized boolean getExecutionEnded(boolean modify, boolean value) {
+		if (modify)
+			executionEnded = value;
+		return executionEnded;
+	}
+
+	public static synchronized boolean getExecutionException(boolean modify, boolean value) {
+		if (modify)
+			executionException = value;
+		return executionException;
+	}
+
 	public static void setTimeInterval() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("conf.txt"));
@@ -52,7 +64,7 @@ public class Executer {
 		try {
 			PrintWriter writer = new PrintWriter("PerformanceMeasures/performanceMeasures.csv");
 
-			writer.println(";Cleaned tiles;Current energy;Dirty initial tiles;Initial energy;Performance measure");
+			writer.println(";Cleaned tiles;Current energy;Dirty initial tiles;Initial energy;Distance from base;Max distance from base;Performance measure");
 
 			for (String jar : jars) {
 				try {
@@ -78,8 +90,8 @@ public class Executer {
 
 						long time = System.currentTimeMillis();
 
-						executionEnded = false;
-						executionException = false;
+						getExecutionEnded(true, false);
+						getExecutionException(true, false);
 
 						boolean theAgentTakeTooTime = false;
 
@@ -87,24 +99,26 @@ public class Executer {
 
 						exec.start();
 
-						while (!executionEnded && !executionException) {
+						while (!getExecutionEnded(false, true) && !getExecutionException(false, true)) {
 							if (System.currentTimeMillis() - time >= timeInterval) {
 								exec.stop();
-								executionEnded = true;
+								getExecutionEnded(true, true);
 								theAgentTakeTooTime = true;
 							}
+							Thread.sleep(1000);
 						}
 
 						if (theAgentTakeTooTime) {
-							writer.println(xml + ";" + "Execution take too time" + ";");
-							System.out.println("The agent take too time");
-						} else if (executionException) {
+							writer.println(xml + ";" + "Execution takes too time" + ";");
+							System.out.println("The agent takes too time");
+						} else if (getExecutionException(false, true)) {
 							writer.println(xml + ";" + "The agent program has thrown an exception :(" + ";");
 							System.out.println("The agent program has thrown an exception :(");
 						} else {
 
 							core.VacuumEnvironmentState state = (VacuumEnvironmentState) enviroment.getCurrentState();
-							String result = state.getCleanedTiles(agent) + ";" + state.getCurrentEnergy(agent) + ";" + state.getDirtyInitialTiles() + ";" + state.getInitialEnergy() + ";" + enviroment.getPerformanceMeasure(agent) + ";";
+							String result = state.getCleanedTiles(agent) + ";" + state.getCurrentEnergy(agent) + ";" + state.getDirtyInitialTiles() + ";" + state.getInitialEnergy()  + ";"
+									+ state.getDistanceFromBase(agent) + ";" + state.getMaxDistanceToTheBase() + ";" + enviroment.getPerformanceMeasure(agent)+ ";";
 							writer.println(xml + ";" + result);
 						}
 					}
@@ -128,6 +142,9 @@ public class Executer {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
