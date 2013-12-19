@@ -46,15 +46,21 @@ public class VacuumEnvironment extends AbstractEnvironment {
 	}
 
 	@Override
-	public EnvironmentState executeAction(final Agent agent, final Action agentAction) {
+	public EnvironmentState executeAction(final Agent agent,
+			final Action agentAction) {
 
 		// If the Agent tries to use more energy than it has, we kill it
-		if (!agentAction.isNoOp() && this.envState.getCurrentEnergy(agent) < this.envState.getEnergyCost(agentAction)) {
+		if (!agentAction.isNoOp()
+				&& this.envState.getCurrentEnergy(agent) < this.envState
+						.getEnergyCost(agentAction)) {
 
 			this.isDone = true;
-			System.out.println("******************************************************************************");
-			System.out.println("* Agent killed by the system because it tried to use more energy than it has *");
-			System.out.println("******************************************************************************");
+			System.out
+					.println("******************************************************************************");
+			System.out
+					.println("* Agent killed by the system because it tried to use more energy than it has *");
+			System.out
+					.println("******************************************************************************");
 
 			this.updatePerformanceMeasure(agent);
 
@@ -72,7 +78,8 @@ public class VacuumEnvironment extends AbstractEnvironment {
 			this.updatePerformanceMeasure(agent);
 		} else {
 			this.envState.moveAgent(agent, agentAction);
-			this.envState.updateCurrentEnergy(agent, this.envState.getEnergyCost(agentAction));
+			this.envState.updateCurrentEnergy(agent,
+					this.envState.getEnergyCost(agentAction));
 		}
 
 		return this.envState;
@@ -95,8 +102,15 @@ public class VacuumEnvironment extends AbstractEnvironment {
 	@Override
 	public Percept getPerceptSeenBy(final Agent anAgent) {
 
-		return new LocalVacuumEnvironmentPerceptTaskEnvironmentB(this.envState.getCellLogicalState(this.envState.getAgentLocation(anAgent)), this.envState.getInitialEnergy(), this.envState.getCurrentEnergy(anAgent),
-				this.envState.getActionEnergyCosts(), this.envState.getN(), this.envState.getM(), this.envState.isMovedLastTime(), this.envState.getBaseLocation().equals(this.envState.getAgentLocation(anAgent)));
+		return new LocalVacuumEnvironmentPerceptTaskEnvironmentB(
+				this.envState.getCellLogicalState(this.envState
+						.getAgentLocation(anAgent)),
+				this.envState.getInitialEnergy(),
+				this.envState.getCurrentEnergy(anAgent),
+				this.envState.getActionEnergyCosts(), this.envState.getN(),
+				this.envState.getM(), this.envState.isMovedLastTime(),
+				this.envState.getBaseLocation().equals(
+						this.envState.getAgentLocation(anAgent)));
 
 	}
 
@@ -112,18 +126,18 @@ public class VacuumEnvironment extends AbstractEnvironment {
 		final double E0 = this.envState.getInitialEnergy();
 		final double CT = this.envState.getCleanedTiles(agent);
 		final double D0 = this.envState.getDirtyInitialTiles();
-		// final double maxDb = this.envState.getMaxDistanceToTheBase();
 		this.envState.computeAverageSquareDistance();
 		final double avgSqrDist = this.envState.getAvarage();
 		final double maxD = this.envState.getMaxDirtyDistance();
 		final double avgSqrDistNorm;
 		if (avgSqrDist == 0 || maxD == 0)
-			avgSqrDistNorm = 0;
+			avgSqrDistNorm = 1;
 		else
-			avgSqrDistNorm = avgSqrDist/maxD;
+			avgSqrDistNorm = avgSqrDist / maxD;
 
 		// Task Environment C
-		final Double performanceMeasure = (Math.pow((CT + 1) / (D0 + 1), 4) + Math.pow(avgSqrDistNorm, 2)) * Math.ceil((ET - BdT + 1) / (E0 + 1));
+		final Double performanceMeasure = (Math.pow((CT + 1) / (D0 + 1), 4) + Math
+				.pow(avgSqrDistNorm, 2)) * Math.ceil((ET - BdT + 1) / (E0 + 1));
 
 		this.performanceMeasures.put(agent, performanceMeasure);
 
