@@ -65,7 +65,7 @@ public class Executer {
 		try {
 			PrintWriter writer = new PrintWriter("PerformanceMeasures/performanceMeasures.csv");
 
-			writer.println(";Cleaned tiles;Current energy;Dirty initial tiles;Initial energy;Distance from base;Max distance from base;Performance measure;Errors");
+			writer.println(";Cleaned tiles;Current energy;Dirty initial tiles;Initial energy;Avarage distance between dirty cells;Max distance between two dirty cells;Performance measure;Errors");
 
 			for (String jar : jars) {
 				try {
@@ -110,8 +110,8 @@ public class Executer {
 
 						enviroment.updatePerformanceMeasure(agent);
 						core.VacuumEnvironmentState state = (VacuumEnvironmentState) enviroment.getCurrentState();
-						String result = state.getCleanedTiles(agent) + ";" + state.getCurrentEnergy(agent) + ";" + state.getDirtyInitialTiles() + ";" + state.getInitialEnergy() + ";" + state.getDistanceFromBase(agent) + ";"
-								+ state.getMaxDistanceToTheBase() + ";" + enviroment.getPerformanceMeasure(agent) + ";";
+						String result = state.getCleanedTiles(agent) + ";" + state.getCurrentEnergy(agent) + ";" + state.getDirtyInitialTiles() + ";" + state.getInitialEnergy() + ";" + state.getAvarage() + ";" + state.getMaxDirtyDistance()
+								+ ";" + enviroment.getPerformanceMeasure(agent) + ";";
 
 						if (theAgentTakeTooTime) {
 							result += "Execution takes too time" + ";";
@@ -121,7 +121,7 @@ public class Executer {
 							result += "The agent program has thrown an exception :(" + ";";
 							System.out.println("The agent program has thrown an exception :(");
 						}
-						if(enviroment.isEnergyLessThenZero()){
+						if (enviroment.isEnergyLessThenZero()) {
 							result += "The agent tried to use more energy than it has" + ";";
 							System.out.println("The agent tried to use more energy than it has");
 						}

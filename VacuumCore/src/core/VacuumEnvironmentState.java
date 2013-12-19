@@ -25,8 +25,7 @@ import core.VacuumEnvironment.LocationState;
  * @author Ciaran O'Reilly
  * @author Andrew Brown
  */
-public class VacuumEnvironmentState implements EnvironmentState,
-		FullyObservableVacuumEnvironmentPercept {
+public class VacuumEnvironmentState implements EnvironmentState, FullyObservableVacuumEnvironmentPercept {
 
 	private final Map<Point, CellLogicalState> state;
 	private final Map<Agent, Point> agentLocations;
@@ -38,7 +37,18 @@ public class VacuumEnvironmentState implements EnvironmentState,
 	private int M;
 	private int dirtyInitialTiles;
 	private int cleanedTiles;
+
+	public double getAvarage() {
+		return avarage;
+	}
+
+	public double getMaxDirtyDistance() {
+		return maxDirtyDistance;
+	}
+
 	private boolean movedLastTime;
+	private double avarage;
+	private double maxDirtyDistance;
 
 	/**
 	 * Constructor
@@ -89,8 +99,7 @@ public class VacuumEnvironmentState implements EnvironmentState,
 	public boolean equals(final Object o) {
 		if (o instanceof VacuumEnvironmentState) {
 			final VacuumEnvironmentState s = (VacuumEnvironmentState) o;
-			if (this.state.equals(s.state)
-					&& this.agentLocations.equals(s.agentLocations))
+			if (this.state.equals(s.state) && this.agentLocations.equals(s.agentLocations))
 				return true;
 		}
 		return false;
@@ -115,9 +124,43 @@ public class VacuumEnvironmentState implements EnvironmentState,
 		return this.agentLocations.get(a);
 	}
 
-	public double getAverageSquareDistance() {
-		// TODO Auto-generated method stub
-		return 1;
+	public void computeAverageSquareDistance() {
+		final DefaultDirectedGraph<Point, DefaultEdge> graph = new DefaultDirectedGraph<Point, DefaultEdge>(DefaultEdge.class);
+
+		// Fill the graph
+		for (final Point p : this.state.keySet())
+			if (!this.state.get(p).getLocState().equals(LocationState.Obstacle))
+				graph.addVertex(p);
+
+		for (final Point p : graph.vertexSet())
+			for (final Point p1 : graph.vertexSet())
+				if (!p.equals(p1))
+					if (p1.getX() == p.getX() + 1 && p1.getY() == p.getY() || p1.getX() == p.getX() - 1 && p1.getY() == p.getY() || p1.getY() == p.getY() + 1 && p1.getX() == p.getX() || p1.getY() == p.getY() - 1 && p1.getX() == p.getX())
+						graph.addEdge(p, p1);
+
+		long distance = 0;
+		long N = 0;
+		long max = 0;
+		List<DefaultEdge> path = null;
+		for (final Point p : graph.vertexSet()) {
+			for (final Point p1 : graph.vertexSet()) {
+				if (!p.equals(p1) && this.state.get(p1).getLocState().equals(LocationState.Dirty) && this.state.get(p).getLocState().equals(LocationState.Dirty)) {
+					path = DijkstraShortestPath.findPathBetween(graph, p, p1);
+					distance += Math.pow(path.size(), 2);
+					N++;
+					if (path.size() >= max)
+						max = path.size();
+				}
+			}
+		}
+
+		if (N <= 1) {
+			avarage = 0;
+			maxDirtyDistance = max;
+			return;
+		}
+		avarage = Math.sqrt((double) distance / N);
+		maxDirtyDistance = max;
 	}
 
 	public Point getBaseLocation() {
@@ -142,8 +185,7 @@ public class VacuumEnvironmentState implements EnvironmentState,
 
 	public double getDistanceFromBase(final Agent agent) {
 
-		final DefaultDirectedGraph<Point, DefaultEdge> graph = new DefaultDirectedGraph<Point, DefaultEdge>(
-				DefaultEdge.class);
+		final DefaultDirectedGraph<Point, DefaultEdge> graph = new DefaultDirectedGraph<Point, DefaultEdge>(DefaultEdge.class);
 
 		// Fill the graph
 		for (final Point p : this.state.keySet())
@@ -151,21 +193,11 @@ public class VacuumEnvironmentState implements EnvironmentState,
 
 		for (final Point p : this.state.keySet())
 			for (final Point p1 : this.state.keySet())
-				if (!p.equals(p1)
-						&& !this.state.get(p1).getLocState()
-								.equals(LocationState.Obstacle))
-					if (p1.getX() == p.getX() + 1 && p1.getY() == p.getY()
-							|| p1.getX() == p.getX() - 1
-							&& p1.getY() == p.getY()
-							|| p1.getY() == p.getY() + 1
-							&& p1.getX() == p.getX()
-							|| p1.getY() == p.getY() - 1
-							&& p1.getX() == p.getX())
+				if (!p.equals(p1) && !this.state.get(p1).getLocState().equals(LocationState.Obstacle))
+					if (p1.getX() == p.getX() + 1 && p1.getY() == p.getY() || p1.getX() == p.getX() - 1 && p1.getY() == p.getY() || p1.getY() == p.getY() + 1 && p1.getX() == p.getX() || p1.getY() == p.getY() - 1 && p1.getX() == p.getX())
 						graph.addEdge(p, p1);
 
-		final List<DefaultEdge> pathToTheBase = DijkstraShortestPath
-				.findPathBetween(graph, this.agentLocations.get(agent),
-						this.baseLocation);
+		final List<DefaultEdge> pathToTheBase = DijkstraShortestPath.findPathBetween(graph, this.agentLocations.get(agent), this.baseLocation);
 
 		// I assumed that there is always a path to the base
 		return pathToTheBase.size();
@@ -190,14 +222,12 @@ public class VacuumEnvironmentState implements EnvironmentState,
 	}
 
 	public double getMaxDistanceBetweenTwoCells() {
-		// TODO Auto-generated method stub
 		return 1;
 	}
 
 	public double getMaxDistanceToTheBase() {
 
-		final DefaultDirectedGraph<Point, DefaultEdge> graph = new DefaultDirectedGraph<Point, DefaultEdge>(
-				DefaultEdge.class);
+		final DefaultDirectedGraph<Point, DefaultEdge> graph = new DefaultDirectedGraph<Point, DefaultEdge>(DefaultEdge.class);
 
 		// Fill the graph
 		for (final Point p : this.state.keySet())
@@ -205,16 +235,8 @@ public class VacuumEnvironmentState implements EnvironmentState,
 
 		for (final Point p : this.state.keySet())
 			for (final Point p1 : this.state.keySet())
-				if (!p.equals(p1)
-						&& !this.state.get(p1).getLocState()
-								.equals(LocationState.Obstacle))
-					if (p1.getX() == p.getX() + 1 && p1.getY() == p.getY()
-							|| p1.getX() == p.getX() - 1
-							&& p1.getY() == p.getY()
-							|| p1.getY() == p.getY() + 1
-							&& p1.getX() == p.getX()
-							|| p1.getY() == p.getY() - 1
-							&& p1.getX() == p.getX())
+				if (!p.equals(p1) && !this.state.get(p1).getLocState().equals(LocationState.Obstacle))
+					if (p1.getX() == p.getX() + 1 && p1.getY() == p.getY() || p1.getX() == p.getX() - 1 && p1.getY() == p.getY() || p1.getY() == p.getY() + 1 && p1.getX() == p.getX() || p1.getY() == p.getY() - 1 && p1.getX() == p.getX())
 						graph.addEdge(p, p1);
 
 		int maxDistance = -1;
@@ -222,8 +244,7 @@ public class VacuumEnvironmentState implements EnvironmentState,
 		// Find the max distance from the base
 		for (final Point point : this.state.keySet()) {
 
-			final List<DefaultEdge> pathToTheBase = DijkstraShortestPath
-					.findPathBetween(graph, point, this.baseLocation);
+			final List<DefaultEdge> pathToTheBase = DijkstraShortestPath.findPathBetween(graph, point, this.baseLocation);
 
 			if (pathToTheBase != null) {
 
@@ -262,10 +283,7 @@ public class VacuumEnvironmentState implements EnvironmentState,
 	public int hashCode() {
 		int hash = 7;
 		hash = 13 * hash + (this.state != null ? this.state.hashCode() : 0);
-		hash = 53
-				* hash
-				+ (this.agentLocations != null ? this.agentLocations.hashCode()
-						: 0);
+		hash = 53 * hash + (this.agentLocations != null ? this.agentLocations.hashCode() : 0);
 		return hash;
 	}
 
@@ -278,17 +296,13 @@ public class VacuumEnvironmentState implements EnvironmentState,
 		this.M = instanceBean.getSize_m();
 		for (int i = 0; i < this.N; i++)
 			for (int j = 0; j < this.M; j++)
-				this.state.put(new Point(i, j),
-						instanceBean.getBoardState()[i][j]);
-		this.baseLocation = new Point(instanceBean.getBasePos().getX(),
-				instanceBean.getBasePos().getY());
+				this.state.put(new Point(i, j), instanceBean.getBoardState()[i][j]);
+		this.baseLocation = new Point(instanceBean.getBasePos().getX(), instanceBean.getBasePos().getY());
 		this.initialEnergy = instanceBean.getEnergy();
 		this.currentEnergy.put(a, this.initialEnergy);
 		for (final String name : instanceBean.getActionCosts().keySet())
-			this.actionEnergyCosts.put(new DynamicAction(name), instanceBean
-					.getActionCosts().get(name));
-		this.agentLocations.put(a, new Point(instanceBean.getAgentPos().getX(),
-				instanceBean.getAgentPos().getY()));
+			this.actionEnergyCosts.put(new DynamicAction(name), instanceBean.getActionCosts().get(name));
+		this.agentLocations.put(a, new Point(instanceBean.getAgentPos().getX(), instanceBean.getAgentPos().getY()));
 	}
 
 	public void moveAgent(final Agent agent, final Action action) {
@@ -309,8 +323,7 @@ public class VacuumEnvironmentState implements EnvironmentState,
 			if (current_location.x < this.N - 1)
 				new_location.x++;
 
-		if (!new_location.equals(current_location)
-				&& this.state.get(new_location).getLocState() != LocationState.Obstacle) {
+		if (!new_location.equals(current_location) && this.state.get(new_location).getLocState() != LocationState.Obstacle) {
 			this.agentLocations.put(agent, new_location);
 			this.movedLastTime = true;
 		} else
@@ -325,8 +338,7 @@ public class VacuumEnvironmentState implements EnvironmentState,
 	 * @param s
 	 */
 	public void setLocationState(final Point location, final CellLogicalState s) {
-		if (this.state.get(location).getLocState() == LocationState.Dirty
-				&& s.getLocState() == LocationState.Clean)
+		if (this.state.get(location).getLocState() == LocationState.Dirty && s.getLocState() == LocationState.Clean)
 			this.cleanedTiles++;
 		this.state.put(location, s);
 	}
@@ -336,13 +348,11 @@ public class VacuumEnvironmentState implements EnvironmentState,
 		final CellLogicalState cellLogicalState = this.state.get(location);
 
 		if (cellLogicalState.getLocState() == LocationState.Dirty) {
-			cellLogicalState
-					.setDirtyAmount(cellLogicalState.getDirtyAmount() - 1);
+			cellLogicalState.setDirtyAmount(cellLogicalState.getDirtyAmount() - 1);
 
 			if (cellLogicalState.getDirtyAmount() <= 0) {
 				this.cleanedTiles++;
-				this.state.put(location, new CellLogicalState(0,
-						LocationState.Clean));
+				this.state.put(location, new CellLogicalState(0, LocationState.Clean));
 			}
 
 		}
