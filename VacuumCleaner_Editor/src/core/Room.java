@@ -19,7 +19,7 @@ public class Room {
 	public static final double DEFAULT_COST_MOVE_DOWN = 1;
 	public static final double DEFAULT_COST_MOVE_LEFT = 1;
 	public static final double DEFAULT_COST_MOVE_RIGHT = 1;
-	public static final double DEFAULT_COST_SUCK = 2;
+	public static final double DEFAULT_COST_SUCK = 1;
 
 	public static final int CLEAN = 0;
 	public static final int DIRTY = 1;
